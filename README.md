@@ -1,4 +1,6 @@
 # WOS+
+Load data bases from [Web of Science](https://www.webofknowledge.com), [Scopus](https://www.scopus.com), [Scielo](https://www.webofknowledge.com), etc, and combine the results into a single data base
+
 For WOSplus execution it is necessary to define drive.cfg file in which you specify the name of the file and the location of it. The drive.cfg file must be present in the execution folder. For example
 ``` bash
 $ cat drive.cfg
