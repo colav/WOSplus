@@ -371,10 +371,6 @@ def get_doi(
         check_mesagges_key=None,
         similarity=0.6,
         JSON=False):
-        import re
-        import requests
-        import time
-        import sys
         '''
         Search for a DOI and check against the full DOI info. If JSON is set True, the full
         info is returned as a python dictionary
@@ -400,6 +396,12 @@ def get_doi(
         2) get_doi(surname='Florez',title='Baryonic violation of R-parity from anomalous U(1)H',JSON=True)
         3) get_doi(DOI)
         '''
+        import re
+        import requests
+        import time
+        import sys
+        import random
+        
         if not check_text:
             check_text=title.lower()
         if not check_mesagges_key:
@@ -421,6 +423,8 @@ def get_doi(
             if title:
                 if len(search)>0:
                     search=search+', '+title
+                else:
+                    search=search+title
             if other:
                 if len(search)>0:
                     search=search+', '+other
@@ -429,11 +433,10 @@ def get_doi(
             urldoi='http://dx.doi.org/'
 
             DOI=''
-            if len(r.text.split(urldoi))>1:
+            try:
                 DOI=r.text.split(urldoi)[1].split("\',")[0].split('>\n')[0]
-            else:
-                DOI=''
-                        
+            except IndexError:
+                DOI=''                        
         if DOI:
             json='https://api.crossref.org/v1/works/'
             rr=requests.get( json+DOI )
@@ -451,5 +454,5 @@ def get_doi(
                         doi=rr.json()["message"]
                                 
                                     
-        time.sleep(1)
+        time.sleep( random.randint(1,3) )
         return doi
