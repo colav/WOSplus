@@ -15,6 +15,7 @@ $ cat drive.cfg
 [FILES]
 Sample_WOS.xlsx = 0BxoOXsn2EUNIMldPUFlwNkdLOTQ
 '''
+# ====  BEGIN: Global variables =====
 ConfigParserFile='drive.cfg'
 
 def load_cfg():
@@ -38,6 +39,8 @@ def ReadConfig(CPfile):
 
 cfg=ReadConfig(ConfigParserFile)
 drive_file=cfg['FILES']
+
+# ====  END: Global variables =====
 
 def load_drive_files_keys(CPfile=ConfigParserFile):
     cfg=load_cfg()
