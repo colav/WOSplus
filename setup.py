@@ -31,10 +31,10 @@ if os.name in ('nt', 'dos'):
 def main():
     setup(
         # Application name:
-        name="WOS+",
+        name="WOSplus",
 
         # Version number (initial):
-        version="0.1.0",
+        version="0.1.1",
 
         # Application author details:
         author="Diego Restrepo",
