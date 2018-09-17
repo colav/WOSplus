@@ -52,9 +52,11 @@ def main():
         #
         license="BSD",
         description="WOS+ is a tools for to manage and merge database of Web Of Science",
+        
+        long_description=open("README.md").read(),
 
-        # long_description=open("README.txt").read(),
-
+        long_description_content_type="text/markdown",
+        
         # Dependent packages (distributions)
         install_requires=[
             'configparser',
