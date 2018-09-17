@@ -4,16 +4,44 @@ from configparser import ConfigParser
 '''
 Based on:
 http://stackoverflow.com/a/39225272
-'''
-cfg=ConfigParser()
-cfg.optionxform=str
-tmp=cfg.read('drive.cfg')
-drive_file=cfg['FILES']
 
-def load_drive_files_keys():
+To change the global variables cfg and drive_file use
+
+self.ReadConfig('drive.cfg')
+
+for some 'drive.cfg' file with format:
+
+$ cat drive.cfg
+[FILES]
+Sample_WOS.xlsx = 0BxoOXsn2EUNIMldPUFlwNkdLOTQ
+'''
+ConfigParserFile='drive.cfg'
+
+def load_cfg():
+    from configparser import ConfigParser    
     cfg=ConfigParser()
     cfg.optionxform=str
-    tmp=cfg.read('drive.cfg')
+
+    return cfg
+
+def ReadConfig(CPfile):
+    from pathlib import Path
+    cfg=load_cfg()
+    my_file = Path(CPfile)
+    if my_file.is_file():
+        tmp=cfg.read(CPfile)
+    else:
+        tmp=cfg.read_dict({'FILES':
+                    {'Sample_WOS.xlsx':'0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
+        
+    return cfg
+
+cfg=ReadConfig(ConfigParserFile)
+drive_file=cfg['FILES']
+
+def load_drive_files_keys(CPfile=ConfigParserFile):
+    cfg=load_cfg()
+    tmp=cfg.read(CPfile)
     return cfg['FILES']
 
     

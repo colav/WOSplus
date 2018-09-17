@@ -2,11 +2,19 @@
 import re
 import pandas as pd
 from configparser import ConfigParser
-from ._google_drive_tools import *
-from ._pajek_tools import *
-from ._wos_scp import *
-from ._merge_tools import *
-from ._wos_parser import *
+try:
+    from ._google_drive_tools import *
+    from ._pajek_tools import *
+    from ._wos_scp import *
+    from ._merge_tools import *
+    from ._wos_parser import *
+except SystemError: #ImportError
+    from _google_drive_tools import *
+    from _pajek_tools import *
+    from _wos_scp import *
+    from _merge_tools import *
+    from _wos_parser import *
+        
 
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
