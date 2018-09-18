@@ -33,7 +33,8 @@ def ReadConfig(CPfile):
         tmp=cfg.read(CPfile)
     else:
         tmp=cfg.read_dict({'FILES':
-                    {'Sample_WOS.xlsx':'0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
+                    {'Sample_WOS.xlsx':'0BxoOXsn2EUNIMldPUFlwNkdLOTQ',
+                     'Sample_WOS.txt' :'12CtQ_SI2OHrvj_etKpqriGsGoVvv9zkL'}})
         
     return cfg
 
