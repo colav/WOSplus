@@ -8,6 +8,10 @@
 # Minimal Python version sanity check (from IPython)
 #-----------------------------------------------------------------------------
 
+# See https://github.com/fhamborg/news-please/wiki/PyPI---How-to-upload-a-new-version
+# python setup.py sdist
+# python setup.py sdist upload
+
 from __future__ import print_function
 from setuptools import setup, find_packages
 
