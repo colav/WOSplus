@@ -16,9 +16,9 @@ except SystemError: #ImportError
     from _wos_parser import *
         
 
-pd.set_option('display.max_rows', 500)
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.max_colwidth',1000)
+#pd.set_option('display.max_rows', 500)
+#pd.set_option('display.max_columns', 500)
+#pd.set_option('display.max_colwidth',1000)
 def grep(pattern,multilinestring):
     '''Grep replacement in python
     as in: $ echo $multilinestring | grep pattern
@@ -84,7 +84,7 @@ class wosplus:
     (Default type is WOS)
     """
 
-    def __init__(self,cfg_file):
+    def __init__(self,cfg_file=''):
         self.df=pd.DataFrame()
         '''
         Based on:
@@ -92,7 +92,12 @@ class wosplus:
         '''
         cfg=ConfigParser()
         cfg.optionxform=str
-        tmp=cfg.read(cfg_file)
+        if cfg_file:
+            tmp=cfg.read(cfg_file)
+        else:
+            tmp=cfg.read_dict({'FILES':
+                    {'Sample_WOS.xlsx':'0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
+            
         self.drive_file=cfg['FILES']
         self.type=pd.Series()
         self.biblio=pd.Series()
@@ -104,6 +109,8 @@ class wosplus:
           prefix='SCP': Load SCI csv file and append the 'SCP_' prefix in each column
         and add the WOS, SCI, or SCP  attribute to self.
         """
+        from pathlib import Path
+        import sys
         DOI='DI'
         if prefix=='SCP': #Only if pure scopus
             DOI='DOI'
@@ -112,8 +119,16 @@ class wosplus:
         if not re.search('\.txt$',WOS_file):
             WOS=read_drive_excel(WOS_file)
         else:
-            wos_txt=download_file_from_google_drive( drive_file.get('{}'.format(WOS_file) ),binary=False)
-            WOS=wos_to_list_to_pandas(wos_txt)
+            id_google_drive=drive_file.get('{}'.format(WOS_file))
+            if id_google_drive:                                     
+                wos_txt=download_file_from_google_drive(  id_google_drive,binary=False)
+                WOS=wos_to_list_to_pandas(wos_txt)
+            else: #check local file
+                my_file = Path(WOS_file)
+                if my_file.is_file():
+                    WOS=wos_parser(WOS_file)
+                else:
+                    sys.exit('WOS File: {}, NOT FOUND!'.format(WOS_file))
 
         WOS=fill_NaN(WOS)
         if prefix=='SCI':

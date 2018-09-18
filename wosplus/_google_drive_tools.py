@@ -90,6 +90,29 @@ def download_file_from_google_drive(id,destination=None,binary=True):
     
     return save_response_content(response, destination=destination,binary=binary)
 
+
+def download_file_from_local_drive(localfile,destination=None,binary=True):
+    '''
+    Download file from google drive as binary (default) or txt file.
+    If not destination the file object is returned
+    Example: Let id="XXX" a txt file:
+    1) fb=download_file_from_google_drive("XXX") ; fb.decode() #to convert to text file
+    2) ft=download_file_from_google_drive("XXX",binary=False) # txt file
+    3) fb=download_file_from_google_drive("XXX",'output_file') # always binay
+    '''
+    URL = "file://"
+
+    session = requests.Session()
+    
+    session.mount('file://', LocalFileAdapter())
+    
+    r=requests_session.get('file://./Sample_WOS.txt')
+
+    response = session.get(URL+'./'+localfile)
+    token = get_confirm_token(response)
+    
+    return save_response_content(response, destination=destination,binary=binary)
+
 def get_confirm_token(response):
     for key, value in response.cookies.items():
         if key.startswith('download_warning'):
@@ -119,7 +142,7 @@ def save_response_content(response, destination=None,binary=True):
             return io.StringIO(chunks.decode()) # returns the file object
         
 def read_drive_excel(file_name,**kwargs):
-    '''Read excel from google drive
+    '''Read excel or csv file from google drive
      Requieres a drive_file dictionary with the keys for the google drive
      file names.
      If the file_name is not found in the drive_file dictionary it is read locally.
