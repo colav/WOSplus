@@ -4,7 +4,7 @@ try:
     from ._google_drive_tools import *
     from ._wos_parser import *
     from ._wos_scp import *
-except SystemError: #ImportError    
+except (SystemError, ImportError):    
     from _google_drive_tools import *
     from _wos_parser import *
     from _wos_scp import *
