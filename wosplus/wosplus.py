@@ -8,7 +8,7 @@ try:
     from ._wos_scp import *
     from ._merge_tools import *
     from ._wos_parser import *
-except SystemError: #ImportError
+except: #ImportError
     from _google_drive_tools import *
     from _pajek_tools import *
     from _wos_scp import *
