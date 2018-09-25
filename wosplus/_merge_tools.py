@@ -6,7 +6,7 @@ import numpy as np
 from unidecode import unidecode
 try:
     from ._wos_scp import *
-except SystemError: #ImportError    
+except (SystemError, ImportError):   
     from _wos_scp import *
 def df_split(dff,on,on_contains=None,Operator=None,condition=None,on_condition=None,on_not_condition=False):
     """
