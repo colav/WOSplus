@@ -5,49 +5,10 @@ from configparser import ConfigParser
 Based on:
 http://stackoverflow.com/a/39225272
 
-To change the global variables cfg and drive_file use
-
-self.ReadConfig('drive.cfg')
-
-for some 'drive.cfg' file with format:
-
-$ cat drive.cfg
-[FILES]
-Sample_WOS.xlsx = 0BxoOXsn2EUNIMldPUFlwNkdLOTQ
+Auxilary functions for Pandas DaraFrame extended method:
+read_drive_excel(...) in wosplus class
+WARNING: Only  Google Drive id's are used here! Not file names.
 '''
-# ====  BEGIN: Global variables =====
-ConfigParserFile='drive.cfg'
-
-def load_cfg():
-    from configparser import ConfigParser    
-    cfg=ConfigParser()
-    cfg.optionxform=str
-
-    return cfg
-
-def ReadConfig(CPfile):
-    from pathlib import Path
-    cfg=load_cfg()
-    my_file = Path(CPfile)
-    if my_file.is_file():
-        tmp=cfg.read(CPfile)
-    else:
-        tmp=cfg.read_dict({'FILES':
-                    {'Sample_WOS.xlsx':'0BxoOXsn2EUNIMldPUFlwNkdLOTQ',
-                     'Sample_WOS.txt' :'12CtQ_SI2OHrvj_etKpqriGsGoVvv9zkL'}})
-        
-    return cfg
-
-cfg=ReadConfig(ConfigParserFile)
-drive_file=cfg['FILES']
-
-# ====  END: Global variables =====
-
-def load_drive_files_keys(CPfile=ConfigParserFile):
-    cfg=load_cfg()
-    tmp=cfg.read(CPfile)
-    return cfg['FILES']
-
     
 def pandas_from_google_drive_csv(id,gss_sheet=0,gss_query=None):
     '''
@@ -189,31 +150,7 @@ def old_save_response_content(response, destination=None,binary=True):
         if binary:
             return io.BytesIO(chunks) # returns the file object
         else:
-            return io.StringIO(chunks.decode()) # returns the file object
-        
-def read_drive_excel(file_name,**kwargs):
-    '''Read excel or csv file from google drive
-     Requieres a drive_file dictionary with the keys for the google drive
-     file names.
-     If the file_name is not found in the drive_file dictionary it is read locally.
-     If the file_name have an extension .csv, tray to read the google spreadsheet 
-     directly: check pandas_from_google_drive_csv for passed options
-     WARNING: ONLY OLD Google Spread Sheet allows to load sheet different from 0
-     '''
-    import pandas as pd
-    import re
-    if re.search('\.csv$',file_name):
-        if drive_file.get(file_name):
-            return pandas_from_google_drive_csv(drive_file.get(file_name),**kwargs)
-        else:
-            return pd.read_csv(file_name,**kwargs)
-
-    if drive_file.get(file_name):    
-        return pd.read_excel( download_file_from_google_drive(
-            drive_file.get(file_name) ) ,**kwargs)  # ,{} is an accepted option   
-    else:
-        return pd.read_excel(file_name,**kwargs)
-    
+            return io.StringIO(chunks.decode()) # returns the file object    
 
 def query_drive_csv(
     gss_url="https://spreadsheets.google.com",
