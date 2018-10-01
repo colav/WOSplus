@@ -102,6 +102,42 @@ class wosplus:
         self.type=pd.Series()
         self.biblio=pd.Series()
 
+    def read_drive_excel(self,file_name,**kwargs):
+        '''
+        TODO: Make independent of the class!
+        Generalization of the Pandas DataFrame read_excel method
+        to include google drive file names:
+         
+         Read excel or csv file from google drive
+         Requires a self.drive_file dictionary intialized with the class
+         (see below) with the id's for the 
+         google drive file names.
+         If the file_name is not found in the drive_file dictionary it is read locally.
+         If the file_name have an extension .csv, try to read the google spreadsheet 
+         directly: check pandas_from_google_drive_csv for passed options
+         WARNING: ONLY OLD Google Spread Sheet allows to load sheet different from 0
+
+         drive_file dictionary: for some file, e.g 'drive.cfg' the format must be:
+          $ cat drive.cfg
+          [FILES]
+          Sample_WOS.xlsx = 0BxoOXsn2EUNIMldPUFlwNkdLOTQ
+        '''
+        import pandas as pd
+        import re
+        # Try to load Google spreadsheet if extension is csv
+        if re.search('\.csv$',file_name):
+            if self.drive_file.get(file_name):
+                return pandas_from_google_drive_csv(
+                    self.drive_file.get(file_name),**kwargs)
+            else:
+                return pd.read_csv(file_name,**kwargs)
+       
+        # Try to load xlsx file if file extension is not csv
+        if self.drive_file.get(file_name):    
+            return pd.read_excel( download_file_from_google_drive(
+                self.drive_file.get(file_name) ) ,**kwargs)  # ,{} is an accepted option   
+        else:
+            return pd.read_excel(file_name,**kwargs)        
     def load_biblio(self,WOS_file,prefix='WOS'):
         """
         Load WOS xlsx file, or if prefix is given:
@@ -121,7 +157,7 @@ class wosplus:
         else:
             id_google_drive=self.drive_file.get('{}'.format(WOS_file))
             if id_google_drive:                                     
-                wos_txt=download_file_from_google_drive(  id_google_drive,binary=False)
+                wos_txt=download_file_from_google_drive(  id_google_drive )#,binary=False)
                 WOS=wos_to_list_to_pandas(wos_txt)
             else: #check local file
                 my_file = Path(WOS_file)
