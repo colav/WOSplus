@@ -136,7 +136,8 @@ def download_file_from_google_drive(id,destination=None,binary=True):
         response = session.get(URL, params = params, stream = True)
 
     
-    return save_response_content(response, destination=destination,binary=binary)
+    # Deprecated: binary
+    return save_response_content(response, file=destination)
 
 
 def download_file_from_local_drive(localfile,destination=None,binary=True):
@@ -159,7 +160,8 @@ def download_file_from_local_drive(localfile,destination=None,binary=True):
     response = session.get(URL+'./'+localfile)
     token = get_confirm_token(response)
     
-    return save_response_content(response, destination=destination,binary=binary)
+    #DEPRECATED: binary
+    return save_response_content(response, file=destination)
 
 def get_confirm_token(response):
     for key, value in response.cookies.items():
