@@ -153,7 +153,7 @@ class wosplus:
         #elif: #Other no WOS-like pures     
 
         if not re.search('\.txt$',WOS_file):
-            WOS=read_drive_excel(WOS_file)
+            WOS=self.read_drive_excel(WOS_file)
         else:
             id_google_drive=self.drive_file.get('{}'.format(WOS_file))
             if id_google_drive:                                     
