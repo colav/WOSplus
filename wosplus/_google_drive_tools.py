@@ -67,6 +67,53 @@ def pandas_from_google_drive_csv(id,gss_sheet=0,gss_query=None):
     if r.status_code==200:
         csv_file=io.StringIO(r.text) # or directly  with: urllib.request.urlopen(url)
         return pd.read_csv( csv_file,keep_default_na=False)
+    
+def save_response_content(response, file=None):
+    '''
+    See help from 
+    download_public_drive_file(...)
+    '''
+    import io
+    CHUNK_SIZE = 32768
+    if file:
+        with open(file, 'wb') as f:
+            f.write(response.content)
+        return
+    else:
+        chunks=b''
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk: # filter out keep-alive new chunks
+                    chunks=chunks+chunk
+
+        try: 
+            ior=io.StringIO(chunks.decode())#.read()
+        except  UnicodeDecodeError:
+            ior=io.BytesIO(chunks)
+
+        # returns the file object
+        return ior
+    
+def download_public_drive_file(file=None,id='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os'):
+    '''
+    Download file from Google Drive public id
+    If 
+      file=None
+    returns: 
+      * File object for a binary file
+        Example: 
+          import pandas as pd
+          pd.read_excel(  download_public_drive_file(id='0BxoOXsn2EUNIMldPUFlwNkdLOTQ')  )[:1]
+          
+      * String for a txt file
+        Example:
+          print( download_public_drive_file(id='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os').read()[:200] )
+          
+    
+    '''
+    import requests as r
+    
+    response=r.get('https://docs.google.com/uc?export=download&id='+id)
+    return save_response_content(response, file=file)
 
 def download_file_from_google_drive(id,destination=None,binary=True):
     '''
@@ -121,7 +168,7 @@ def get_confirm_token(response):
 
     return None
 
-def save_response_content(response, destination=None,binary=True):
+def old_save_response_content(response, destination=None,binary=True):
     CHUNK_SIZE = 32768
 
     if destination:
