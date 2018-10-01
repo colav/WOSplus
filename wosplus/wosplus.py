@@ -119,7 +119,7 @@ class wosplus:
         if not re.search('\.txt$',WOS_file):
             WOS=read_drive_excel(WOS_file)
         else:
-            id_google_drive=drive_file.get('{}'.format(WOS_file))
+            id_google_drive=self.drive_file.get('{}'.format(WOS_file))
             if id_google_drive:                                     
                 wos_txt=download_file_from_google_drive(  id_google_drive,binary=False)
                 WOS=wos_to_list_to_pandas(wos_txt)
