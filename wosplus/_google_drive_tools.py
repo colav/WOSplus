@@ -34,7 +34,6 @@ def save_response_content(response, file=None):
     See help from 
     download_public_drive_file(...)
     '''
-    import io
     CHUNK_SIZE = 32768
     if file:
         with open(file, 'wb') as f:
@@ -68,15 +67,11 @@ def download_public_drive_file(file=None,id='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os')
       * String for a txt file
         Example:
           print( download_public_drive_file(id='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os').read()[:200] )
-          
-    
     '''
-    import requests as r
-    
-    response=r.get('https://docs.google.com/uc?export=download&id='+id)
+    response=requests.get('https://docs.google.com/uc?export=download&id='+id)
     return save_response_content(response, file=file)
 
-def download_file_from_google_drive(id,destination=None,binary=True):
+def download_file_from_google_drive(gid,destination=None,binary=True):
     '''
     Download file from google drive as binary (default) or txt file.
     If not destination the file object is returned
@@ -89,7 +84,7 @@ def download_file_from_google_drive(id,destination=None,binary=True):
 
     session = requests.Session()
 
-    response = session.get(URL, params = { 'id' : id }, stream = True)
+    response = session.get(URL, params = { 'id' : gid }, stream = True)
     token = get_confirm_token(response)
 
     if token:
