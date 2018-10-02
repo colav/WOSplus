@@ -1,6 +1,5 @@
 import requests
 import io
-from configparser import ConfigParser
 '''
 Based on:
 http://stackoverflow.com/a/39225272
@@ -86,11 +85,10 @@ def download_file_from_google_drive(gid,destination=None,binary=True):
 
     response = session.get(URL, params = { 'id' : gid }, stream = True)
     token = get_confirm_token(response)
-
+    
     if token:
         params = { 'id' : id, 'confirm' : token }
         response = session.get(URL, params = params, stream = True)
-
     
     # Deprecated: binary
     return save_response_content(response, file=destination)
