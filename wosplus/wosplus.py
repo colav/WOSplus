@@ -8,7 +8,7 @@ try:
     from ._wos_scp import *
     from ._merge_tools import *
     from ._wos_parser import *
-except (SystemError, ImportError):
+except (SystemError, ImportError,ModuleNotFoundError):
     from _google_drive_tools import *
     from _pajek_tools import *
     from _wos_scp import *
@@ -201,7 +201,10 @@ class wosplus:
         self.type['{}'.format(prefix)]='{}'.format(prefix)        
         self.biblio['{}'.format(prefix)]=WOS
         
-    def merge(self,left='WOS',right='SCI',DEBUG=False):
+    def merge(self,left='WOS',right='SCI',
+                   right_DOI=None,right_TI=None,right_extra_journal=None,
+                   right_author=None,right_year=None,
+              DEBUG=False):
         """
         Combined left and right bibliographic dataframes by type and with how='outer' 
         The type must coincide with the Object attribute: eg: 
@@ -244,7 +247,7 @@ class wosplus:
             right_author='SCI_AU'
             right_year='SCI_PY'
         elif right=='SCP':
-            if not 'SCP_Title_0' in right_df:
+            if 'SCP_Title' in right_df and not 'SCP_Title_0' in right_df:
                 right_df=split_translated_columns(right_df.copy(),on='SCP_Title',sep='\[',min_title=16)
             right_DOI='SCP_DOI'
             right_TI='SCP_Title'
@@ -359,7 +362,7 @@ class wosplus:
         LEFT_RIGHT=new_LEFT
         LEFT_RIGHT=LEFT_RIGHT.append(LEFT_RIGHT_inner)
         LEFT_RIGHT=LEFT_RIGHT.append(full_RIGHT)
-        LEFT_RIGHT=fill_NaN(LEFT_RIGHT)
+        LEFT_RIGHT=fill_NaN(LEFT_RIGHT).reset_index(drop=True)
          
         if DEBUG:    
             self.LEFT=LEFT
@@ -372,11 +375,3 @@ class wosplus:
         exec('self.{}_{}=LEFT_RIGHT'.format(left,right))
         self.type['{}_{}'.format(left,right)]='{}_{}'.format(left,right)        
         self.biblio['{}_{}'.format(left,right)]=LEFT_RIGHT
-
-if __name__=='__main__':
-    WOS_file='CIB_Wos.xlsx'
-    SCI_file='CIB_Scielo.xlsx'
-    SCP_file='CIB_Scopus.csv'
-    cib=wosplus('drive.cfg')
-    cib.load_biblio(WOS_file)
-    
