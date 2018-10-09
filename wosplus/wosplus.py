@@ -8,7 +8,7 @@ try:
     from ._wos_scp import *
     from ._merge_tools import *
     from ._wos_parser import *
-except (SystemError, ImportError,ModuleNotFoundError):
+except (SystemError, ImportError):
     from _google_drive_tools import *
     from _pajek_tools import *
     from _wos_scp import *
@@ -375,3 +375,10 @@ class wosplus:
         exec('self.{}_{}=LEFT_RIGHT'.format(left,right))
         self.type['{}_{}'.format(left,right)]='{}_{}'.format(left,right)        
         self.biblio['{}_{}'.format(left,right)]=LEFT_RIGHT
+
+if __name__=='__main__':
+    WOS_file='CIB_Wos.xlsx'
+    SCI_file='CIB_Scielo.xlsx'
+    SCP_file='CIB_Scopus.csv'
+    cib=wosplus('drive.cfg')
+    cib.load_biblio(WOS_file)
