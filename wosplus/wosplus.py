@@ -16,6 +16,7 @@ except (SystemError, ImportError):
     from _wos_parser import *
         
 
+#TODO: change Tipo for Type or something similar
 #pd.set_option('display.max_rows', 500)
 #pd.set_option('display.max_columns', 500)
 #pd.set_option('display.max_colwidth',1000)
@@ -206,15 +207,27 @@ class wosplus:
                    right_author=None,right_year=None,
               DEBUG=False):
         """
-        Combined left and right bibliographic dataframes by type and with how='outer' 
-        The type must coincide with the Object attribute: eg: 
-        left='WOS' imply that WOS must be an attribute of
-        self: self.WOS
-        the resulting DataFrame is returned as:
+        Merge left and right bibliographic dataframes by TYPE and with 
+        Python merge ooption: `how='outer'`
+        The TYPE must coincide with the Object attribute Dataframe: eg: 
+         `left='WOS'` imply that WOS must be an attribute of
+          self: self.WOS
+         `right='SCI'` imply that WOS must be an attribute of
+          self: self.WOS
+        The DataFrame attributtes of the object `self` are populated by using
+          `self.loadbiblio(file)`: See `self` help for further instructions.
+
+        The self.right DataFrame need to have some mandatories columns:
+         [[right_DOI,right_TI,right_extra_journal,right_author,right_year]]
+         They are automatically defined for self.righ TYPE: SCI and SCP and
+         must be given for other TYPE
+        
+        Output:
+        The resulting DataFrame is returned as:
           * self.left_right # with strings names converted into variable names
           * self.bibilio['left_right'] # pd.Series
-        and also the new resulting type is stored as  
-          * self.type['left_right'] -> 'left_right' # pd.Series
+        and also the new resulting TYPE is stored as  
+          * self.Tipo['left_right'] -> 'left_right' # pd.Series
         """
         if not hasattr(self,left) or not hasattr(self,right):
             sys.exit('ERROR:  {} and {} must be attributes of class {}'.format(left,right,self.__class__.__name__))
