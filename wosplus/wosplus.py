@@ -228,6 +228,10 @@ class wosplus:
           * self.bibilio['left_right'] # pd.Series
         and also the new resulting TYPE is stored as  
           * self.Tipo['left_right'] -> 'left_right' # pd.Series
+          
+        The merged DOI, Titles and Journal Names are stored in 
+        the WOS like `self.left_right` columns: DI,TI,SO with `self.left`
+        priority for the values.
         """
         if not hasattr(self,left) or not hasattr(self,right):
             sys.exit('ERROR:  {} and {} must be attributes of class {}'.format(left,right,self.__class__.__name__))
