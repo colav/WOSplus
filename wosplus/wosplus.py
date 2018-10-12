@@ -63,11 +63,17 @@ class wosplus:
     A config file, e.g 'drive.cfg' is expected with the following structure
     ==============================================================
     [FILES]
-    WOS_FILE.xlsx                   = 0BxoOXsn2EUNIQ3R4WDhvSzVLQ2s
+    WOS_FILE.xlsx              = 1--LJZ4mYyQcaJ93xBdbnYj-ZzdjO2Wq2
     ...
     ==============================================================
     USAGE:
-        wp=wosplus('drive.cfg').drive_file.get('CIB_Scopus.csv')
+        import wosplus as wp
+        WOS=wp.wosplus('drive.cfg')
+        #check Google Drive id for file 
+        WOS.drive_file.get('WOS_FILE.xlsx')
+        #load biblio
+        WOS.load_biblio('WOS_FILE.xlsx')
+        # DataFrame in WOS.WOS or WOS.biblio['WOS']
         
     The main method is 'load_biblio' it must have a prefix according to
     the type of supported bibliography. This prefix will be appended 
