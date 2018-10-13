@@ -214,12 +214,13 @@ class wosplus:
               DEBUG=False):
         """
         Merge left and right bibliographic dataframes by TYPE and with 
-        Python merge ooption: `how='outer'`
+        Python merge ooption: `how='outer'`.
+        
         The TYPE must coincide with the Object attribute Dataframe: eg: 
-         `left='WOS'` imply that WOS must be an attribute of
-          self: self.WOS
-         `right='SCI'` imply that WOS must be an attribute of
-          self: self.WOS
+        `left='WOS'` imply that WOS must be an attribute of
+        self: self.WOS
+        `right='SCI'` imply that WOS must be an attribute of
+        self: self.WOS
         The DataFrame attributtes of the object `self` are populated by using
           `self.loadbiblio(file)`: See `self` help for further instructions.
 
