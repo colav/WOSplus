@@ -14,7 +14,6 @@ except (SystemError, ImportError):
     from _wos_scp import *
     from _merge_tools import *
     from _wos_parser import *
-        
 
 #TODO: change Tipo for Type or something similar
 #pd.set_option('display.max_rows', 500)
@@ -25,7 +24,6 @@ def grep(pattern,multilinestring):
     as in: $ echo $multilinestring | grep pattern
     dev: re.M is for multiline strings
     '''
-    import re 
     grp=re.finditer('(.*)%s(.*)' %pattern, multilinestring,re.M)
     return '\n'.join([g.group(0) for g in grp])
 
@@ -69,24 +67,24 @@ class wosplus:
     USAGE:
         import wosplus as wp
         WOS=wp.wosplus('drive.cfg')
-        #check Google Drive id for file 
+        #check Google Drive id for file
         WOS.drive_file.get('WOS_FILE.xlsx')
         #load biblio
         WOS.load_biblio('WOS_FILE.xlsx')
         # DataFrame in WOS.WOS or WOS.biblio['WOS']
-        
+  
     The main method is 'load_biblio' it must have a prefix according to
-    the type of supported bibliography. This prefix will be appended 
+    the type of supported bibliography. This prefix will be appended
     to the ALL the columns of the generated bibligraphy
-        
-    wp.type gives the type of bibliography Data Base. 
-    Currently implenented: 
-      * WOS: two characters columns 
+
+    wp.type gives the type of bibliography Data Base.
+    Currently implenented:
+      * WOS: two characters columns
       * SCI: prefixed SCI_ columns is returned
       * SCP: prefixed SCP_ columns is returned 
-    and any combinantion 
+    and any combinantion
     of them keeping the same ordering.
-    
+
     The type mus be declared with the 'load_biblio' with the 'prefix' option
     (Default type is WOS)
     """
@@ -117,10 +115,10 @@ class wosplus:
          
          Read excel or csv file from google drive
          Requires a self.drive_file dictionary intialized with the class
-         (see below) with the id's for the 
+         (see below) with the id's for the
          google drive file names.
          If the file_name is not found in the drive_file dictionary it is read locally.
-         If the file_name have an extension .csv, try to read the google spreadsheet 
+         If the file_name have an extension .csv, try to read the google spreadsheet
          directly: check pandas_from_google_drive_csv for passed options
          WARNING: ONLY OLD Google Spread Sheet allows to load sheet different from 0
 
@@ -129,8 +127,6 @@ class wosplus:
           [FILES]
           Sample_WOS.xlsx = 0BxoOXsn2EUNIMldPUFlwNkdLOTQ
         '''
-        import pandas as pd
-        import re
         # Try to load Google spreadsheet if extension is csv
         if re.search('\.csv$',file_name):
             if self.drive_file.get(file_name):
@@ -140,11 +136,11 @@ class wosplus:
                 return pd.read_csv(file_name,**kwargs)
        
         # Try to load xlsx file if file extension is not csv
-        if self.drive_file.get(file_name):    
+        if self.drive_file.get(file_name):
             return pd.read_excel( download_file_from_google_drive(
-                self.drive_file.get(file_name) ) ,**kwargs)  # ,{} is an accepted option   
+                self.drive_file.get(file_name) ) ,**kwargs)  # ,{} is an accepted option
         else:
-            return pd.read_excel(file_name,**kwargs)        
+            return pd.read_excel(file_name,**kwargs)
     def load_biblio(self,WOS_file,prefix='WOS'):
         """
         Load WOS xlsx file, or if prefix is given:
@@ -157,7 +153,7 @@ class wosplus:
         DOI='DI'
         if prefix=='SCP': #Only if pure scopus
             DOI='DOI'
-        #elif: #Other no WOS-like pures     
+        #elif: #Other no WOS-like pures
 
         if not re.search('\.txt$',WOS_file):
             WOS=self.read_drive_excel(WOS_file)
@@ -205,7 +201,7 @@ class wosplus:
             WOS['Tipo']=prefix
             
         exec('self.{}=WOS'.format(prefix))
-        self.type['{}'.format(prefix)]='{}'.format(prefix)        
+        self.type['{}'.format(prefix)]='{}'.format(prefix)
         self.biblio['{}'.format(prefix)]=WOS
         
     def merge(self,left='WOS',right='SCI',
@@ -216,7 +212,7 @@ class wosplus:
         Merge left and right bibliographic dataframes by TYPE and with 
         Python merge ooption: `how='outer'`.
         
-        The TYPE must coincide with the Object attribute Dataframe: eg: 
+        The TYPE must coincide with the Object attribute Dataframe: eg:
         `left='WOS'` imply that WOS must be an attribute of
         self: self.WOS
         `right='SCI'` imply that WOS must be an attribute of
@@ -233,10 +229,10 @@ class wosplus:
         The resulting DataFrame is returned as:
           * self.left_right # with strings names converted into variable names
           * self.bibilio['left_right'] # pd.Series
-        and also the new resulting TYPE is stored as  
+        and also the new resulting TYPE is stored as
           * self.Tipo['left_right'] -> 'left_right' # pd.Series
           
-        The merged DOI, Titles and Journal Names are stored in 
+        The merged DOI, Titles and Journal Names are stored in
         the WOS like `self.left_right` columns: DI,TI,SO with `self.left`
         priority for the values.
         """
@@ -247,7 +243,7 @@ class wosplus:
             sys.exit('ERROR: missing biblio Series in {}'.format(left,right,self.__class__.__name__)  )
 
         if left not in self.type or right not in self.type:
-            sys.exit('ERROR: missing type Series in {}'.format(left,right,self.__class__.__name__)  )            
+            sys.exit('ERROR: missing type Series in {}'.format(left,right,self.__class__.__name__)  )          
             
         left_df=self.biblio[left].copy()
         right_df=self.biblio[right].copy()
