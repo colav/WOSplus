@@ -4,12 +4,12 @@ def get_close_matches_Levenshtein(word, possibilities,n=3,cutoff=0.6,full=False)
     '''Replaces difflib.get_close_matches with faster algortihm based on
        Levenshtein.ratio.
        HINT: Similarity increase significatively after lower() and unidecode()
-       
+ 
        Refs: https://en.wikipedia.org/wiki/Levenshtein_distance
     '''
     import pandas as pd
     import Levenshtein
-    if type(possibilities)==str:
+    if isinstance(possibilities,str):
         possibilities=[possibilities]
     rl=['']
     rs=pd.DataFrame()
@@ -37,14 +37,14 @@ def get_close_matches_Levenshtein(word, possibilities,n=3,cutoff=0.6,full=False)
 def check_hash(df,hashseries,in_hash,min_match=10):
     ''' hashseries obtained from dataframe df, e.g
           hashseris=df.some_column.str.replace('\W+','').str.lower().map(unicode)
-        within which in_hash will be searched for match at least min_match characters  
+        within which in_hash will be searched for match at least min_match characters
     '''
     comparision=True
     for si in reversed(range(0,len(in_hash)+1)):
         chk=df[hashseries.str.match(in_hash[:si])]
         if chk.shape[0]>0:
             return comparision,chk
-            break    
+            #break
         if si<min_match:
             comparision=False
             return comparision,pd.DataFrame()
@@ -57,7 +57,7 @@ def fill_NaN(df):
     '''Fill NaN entries with proper empty values
      Type  : dtype: Fill with
      string: "0"  : ''
-     float : "float64" 
+     float : "float64"
     '''
     for key in df.columns:
         if df[key].dtype=='O':
@@ -69,7 +69,7 @@ def read_excel_fill_NaN(*args, **kwargs):
     '''Fill NaN entries with proper empty values
      Type  : dtype: Fill with
      string: "0"  : ''
-     float : "float64" 
+     float : "float64"
     '''
     df=pd.read_excel(*args, **kwargs)
     df=fill_NaN(df)
@@ -139,11 +139,11 @@ def merge_with_close_matches(left,right,left_on='ST',right_on='UDEA_simple_títu
                              left_extra_on='SO',right_extra_on='UDEA_nombre revista o premio',\
                              how='inner',\
                                  n=1,cutoff=0.6,full=True,cutoff_extra=0.6):
-    '''For each entry of the column: left_on of DataFrame left (cannot have empty fields), 
-       try to find the close match inside each row of right DataFrame, by comparing with 
-       the right_on entry of the row. When a row match is found, the full right row is appended 
-       to the matched row in the left DataFrame. 
-       If the similarity between the entries at left_on and right_on is less than 0.8,  
+    '''For each entry of the column: left_on of DataFrame left (cannot have empty fields),
+       try to find the close match inside each row of right DataFrame, by comparing with
+       the right_on entry of the row. When a row match is found, the full right row is appended
+       to the matched row in the left DataFrame.
+       If the similarity between the entries at left_on and right_on is less than 0.8,
        an additional check is performed between the entries left_extra_on and right_extra_on
        of the matched row.
        
@@ -152,7 +152,7 @@ def merge_with_close_matches(left,right,left_on='ST',right_on='UDEA_simple_títu
     import numpy as np
     from unidecode import unidecode
     import pandas as pd
-    import sys
+    #import sys #import globally
     #print(left[left_on][0])
     #sys.exit()
     words=left[left_on].str.lower().map(unidecode)
@@ -188,7 +188,7 @@ def merge_with_close_matches(left,right,left_on='ST',right_on='UDEA_simple_títu
         if how=='left' or 'outer':
             joined=joined.append(joined_series,ignore_index=True)
     if how=='outer':
-        joined=joined.append( right.drop(right.index[ list(mi.astype(int)) ] ).reset_index(drop=True)   ) 
+        joined=joined.append( right.drop(right.index[ list(mi.astype(int)) ] ).reset_index(drop=True)   )
     return joined
 
 
@@ -218,7 +218,7 @@ def merge_udea_points(original_df,target_df,check_columns=['UDEA_simple_title','
         print('check final shape after STEP %d: %d' %(STEP,joined.shape[0]) )
 
     udea_found=joined[joined[new_column]!=''].reset_index(drop=True)  #42
-    original_df=joined[joined[new_column]==''].reset_index(drop=True) #58 
+    original_df=joined[joined[new_column]==''].reset_index(drop=True) #58
 
     if DEBUG:
         print(STEP,'->',udea_found.shape,original_df.shape,udea_found.shape[0]+original_df.shape[0])
@@ -258,7 +258,7 @@ def merge_udea_points(original_df,target_df,check_columns=['UDEA_simple_title','
         if new_column in joined: #1: False; #2: True
             udea_found        =udea_found.append(joined[joined[new_column]!=''],ignore_index=True) #2:7+42=49
             if STEP==1:
-                original_df=original_df.append(joined[joined[new_column]==''],ignore_index=True) 
+                original_df=original_df.append(joined[joined[new_column]==''],ignore_index=True)
             else:
                 original_df=joined[joined[new_column]==''] #2:51
             if DEBUG:
@@ -382,7 +382,7 @@ def get_doi(
           The checking is doing by comparing check_text with the check_mesagges_key from the full info.
           By default the given 'title' is used for the check.
           
-          For other possible check_mesagges_key's, see in a browser the several keys of the 'mesagges' 
+          For other possible check_mesagges_key's, see in a browser the several keys of the 'mesagges'
           dictionary at:
              https://api.crossref.org/v1/works/DOI, 
           for example:
@@ -396,9 +396,8 @@ def get_doi(
         2) get_doi(surname='Florez',title='Baryonic violation of R-parity from anomalous U(1)H',JSON=True)
         3) get_doi(DOI)
         '''
-        import re
         import requests
-        import time
+        #import time imported globally
         import sys
         import random
         
