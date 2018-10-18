@@ -1,12 +1,10 @@
 import pandas as pd
-import re
-import sys
 import numpy as np
 
 from unidecode import unidecode
 try:
     from ._wos_scp import *
-except (SystemError, ImportError):   
+except (SystemError, ImportError):
     from _wos_scp import *
 def df_split(dff,on,on_contains=None,Operator=None,condition=None,on_condition=None,on_not_condition=False):
     """
@@ -96,7 +94,7 @@ def merge_by_series(left,right,\
     if left_series.shape[0] or right_series.shape[0]:
         new_right=new_right.drop( [left_on,right_on] ,axis='columns')
 
-    #if left_series.shape[0] and right_series.shape[0]:        
+    #if left_series.shape[0] and right_series.shape[0]:
     #    left=left.drop(left_on,axis='columns')
         
     return new_left.reset_index(drop=True),inner.reset_index(drop=True),new_right.reset_index(drop=True)
@@ -111,7 +109,7 @@ def clean(pds):
 def split_translated_columns(df,on='SCP_Title',sep='\[',min_title=10,initialize=''):
     ''' 
     Creates new columns with the splite results of translates titles in the format lang1 `sep`lang2]`sep`.
-    The new colums are called `on`_0 (not translated) `on`_1, and `on`_2. 
+    The new colums are called `on`_0 (not translated) `on`_1, and `on`_2.
     '''    
     if sep=='\[':
         trail='\]'

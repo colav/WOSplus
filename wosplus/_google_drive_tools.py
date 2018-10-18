@@ -8,7 +8,7 @@ Auxilary functions for Pandas DaraFrame extended method:
 read_drive_excel(...) in wosplus class
 WARNING: Only  Google Drive id's are used here! Not file names.
 '''
-    
+
 def pandas_from_google_drive_csv(id,gss_sheet=0,gss_query=None):
     '''
     Read Google spread sheet by id.

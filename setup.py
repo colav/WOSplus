@@ -38,7 +38,7 @@ def main():
         name="WOSplus",
 
         # Version number (initial):
-        version="0.1.7",
+        version="0.1.8",
 
         # Application author details:
         author="Diego Restrepo",
@@ -74,4 +74,4 @@ def main():
     )
 
 if __name__ == "__main__":
-    main()    
+    main()

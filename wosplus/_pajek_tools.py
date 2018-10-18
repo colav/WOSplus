@@ -4,7 +4,7 @@ try:
     from ._google_drive_tools import *
     from ._wos_parser import *
     from ._wos_scp import *
-except (SystemError, ImportError):    
+except (SystemError, ImportError):
     from _google_drive_tools import *
     from _wos_parser import *
     from _wos_scp import *
@@ -29,7 +29,7 @@ def DataFame_to_pajek(\
        ========= WOS to Pajek ==============
                      
        From a DataFrame with the columns of Web of Science txt file, 
-       convert the data from an emisor and a receptor WOS identifiers 
+       convert the data from an emisor and a receptor WOS identifiers
        (see sample input below), into a Pajek .net file. 
        
        Also returns a simplified DataFrame with emisor (receptor) column, 
@@ -60,7 +60,7 @@ def DataFame_to_pajek(\
 
     CR=pd.DataFrame()
     step=10
-    print(wos.shape[0]-step)    
+    print(wos.shape[0]-step)
     for i in wos.index:
         if i%step==0:
             print(i,end='\r')
@@ -108,7 +108,7 @@ def wos_to_pajek(\
     """
        ========= WOS to Pajek ==============
                      
-       From the google drive key of a Web of Science txt file with public link, 
+       From the google drive key of a Web of Science txt file with public link,
        convert the data from an emisor and a receptor WOS identifiers 
        (see sample input below), into a Pajek .net file. 
        

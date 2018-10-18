@@ -243,7 +243,7 @@ class wosplus:
             sys.exit('ERROR: missing biblio Series in {}'.format(left,right,self.__class__.__name__)  )
 
         if left not in self.type or right not in self.type:
-            sys.exit('ERROR: missing type Series in {}'.format(left,right,self.__class__.__name__)  )          
+            sys.exit('ERROR: missing type Series in {}'.format(left,right,self.__class__.__name__)  )
             
         left_df=self.biblio[left].copy()
         right_df=self.biblio[right].copy()
@@ -310,8 +310,8 @@ class wosplus:
             
         #Merge on (splitted) Titles: generated with 'split_translated_columns' before
         #next_RIGHT have column information even if empty
-        for nTI in [right_TI]+[ x for x in next_RIGHT.columns 
-                                if re.search( '{}_[0-9]+'.format(right_TI),x  )]:        
+        for nTI in [right_TI]+[ x for x in next_RIGHT.columns
+                                if re.search( '{}_[0-9]+'.format(right_TI),x  )]:
             RIGHT_on=nTI
             full_RIGHT=new_RIGHT.append(next_RIGHT)
             RIGHT,next_RIGHT=df_split(full_RIGHT,on=RIGHT_on,on_not_condition=True)
@@ -393,7 +393,7 @@ class wosplus:
             self.full_RIGHT=full_RIGHT
         
         exec('self.{}_{}=LEFT_RIGHT'.format(left,right))
-        self.type['{}_{}'.format(left,right)]='{}_{}'.format(left,right)        
+        self.type['{}_{}'.format(left,right)]='{}_{}'.format(left,right)
         self.biblio['{}_{}'.format(left,right)]=LEFT_RIGHT
 
 if __name__=='__main__':
