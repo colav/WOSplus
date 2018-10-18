@@ -1,10 +1,8 @@
 try:
     import wosplus
-except (ImportError,ModuleNotFoundError):
-    wdir='../wosplus'
-    import os
-    if os.path.isdir(wdir):
-        os.chdir(wdir)
+except: #(ImportError, ModuleNotFoundError):
+    import sys
+    sys.path.append("../wosplus")
     import wosplus
     
 import unittest
