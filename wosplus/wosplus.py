@@ -197,8 +197,10 @@ class wosplus:
             WOS=columns_add_prefix(WOS,prefix)
 
         # Without prefix columns
-        if not re.search('_',prefix):
+        if not WOS.get('Tipo') and not re.search('_',prefix):
             WOS['Tipo']=prefix
+        else:
+            print('WARNING: Biblio already has a "Tipo" column')
             
         exec('self.{}=WOS'.format(prefix))
         self.type['{}'.format(prefix)]='{}'.format(prefix)
