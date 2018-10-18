@@ -8,6 +8,8 @@ WOSplus.egg-info/dependency_links.txt
 WOSplus.egg-info/requires.txt
 WOSplus.egg-info/top_level.txt
 tests/drive.cfg
+tests/test.py
+tests/test.py~
 tests/test_sample.py
 wosplus/__init__.py
 wosplus/_google_drive_tools.py
