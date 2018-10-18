@@ -1,6 +1,6 @@
 try:
     import wosplus
-except ImportError:
+except (ImportError,ModuleNotFoundError):
     wdir='../wosplus'
     import os
     if os.path.isdir(wdir):
