@@ -8,11 +8,9 @@
 # Minimal Python version sanity check (from IPython)
 #-----------------------------------------------------------------------------
 
-# https://packaging.python.org/guides/making-a-pypi-friendly-readme/
-# See https://github.com/fhamborg/news-please/wiki/PyPI---How-to-upload-a-new-version
-# python setup.py sdist
-# python setup.py sdist upload
-# python setup.py sdist bdist_wheel   # adjust as needed
+# See https://stackoverflow.com/a/26737258/2268280
+# sudo pip3 install twine
+# python3 setup.py sdist bdist_wheel   # adjust as needed
 # twine update dist/*
 
 from __future__ import print_function
@@ -41,7 +39,7 @@ def main():
         name="WOSplus",
 
         # Version number (initial):
-        version="0.2.1",
+        version="0.2.2",
 
         # Application author details:
         author="Diego Restrepo",
