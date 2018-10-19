@@ -11,7 +11,9 @@
 # See https://stackoverflow.com/a/26737258/2268280
 # sudo pip3 install twine
 # python3 setup.py sdist bdist_wheel   # adjust as needed
-# twine update dist/*
+# twine upload dist/*
+# For test purposes
+# twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 from __future__ import print_function
 from setuptools import setup, find_packages
