@@ -27,7 +27,7 @@ wos.WOS
 #or as
 wos.biblio['WOS']
 ```
-Further details [test_sample.ipynb](./test_sample.ipynb)
+Further details [test_sample.ipynb](https://github.com/restrepo/WOSplus/blob/master/test_sample.ipynb)
 
 <!-- mv diagram to http://interactive.blockdiag.com and links as in https://github.com/jupyter/docker-stacks -->
 
