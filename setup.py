@@ -10,7 +10,7 @@
 
 # See https://stackoverflow.com/a/26737258/2268280
 # sudo pip3 install twine
-# python3 setup.py sdist bdist_wheel   # adjust as needed
+# python3 setup.py sdist bdist_wheel
 # twine upload dist/*
 # For test purposes
 # twine upload --repository-url https://test.pypi.org/legacy/ dist/*
@@ -41,7 +41,7 @@ def main():
         name="WOSplus",
 
         # Version number (initial):
-        version="0.2.2",
+        version="0.2.3",
 
         # Application author details:
         author="Diego Restrepo",
