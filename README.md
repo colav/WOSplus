@@ -1,5 +1,5 @@
 # WOS+
-<!-- -->
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e9e840f8451e4894884c70a6759ff3a6)](https://www.codacy.com/app/restrepo/WOSplus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=restrepo/WOSplus&amp;utm_campaign=Badge_Grade) 
 
 Load data bases from [Web of Science](https://www.webofknowledge.com), [Scopus](https://www.scopus.com), [Scielo](https://www.webofknowledge.com), etc, and combine the results into a single data base
@@ -15,8 +15,6 @@ See also the drive.cfg file in the test folder which gives some addresses of sam
 ``` bash
 # pip install wosplus
 ```
-
-<!-- mv diagram to http://interactive.blockdiag.com and links as in https://github.com/jupyter/docker-stacks -->
 
 ## Visual Overview
 ![design](./internal/inherit-diagram.svg)
