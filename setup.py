@@ -12,6 +12,8 @@
 # See https://github.com/fhamborg/news-please/wiki/PyPI---How-to-upload-a-new-version
 # python setup.py sdist
 # python setup.py sdist upload
+# python setup.py sdist bdist_wheel   # adjust as needed
+# twine update dist/*
 
 from __future__ import print_function
 from setuptools import setup, find_packages
@@ -39,7 +41,7 @@ def main():
         name="WOSplus",
 
         # Version number (initial):
-        version="0.2.0",
+        version="0.2.1",
 
         # Application author details:
         author="Diego Restrepo",
