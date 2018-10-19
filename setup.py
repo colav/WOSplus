@@ -8,6 +8,7 @@
 # Minimal Python version sanity check (from IPython)
 #-----------------------------------------------------------------------------
 
+# https://packaging.python.org/guides/making-a-pypi-friendly-readme/
 # See https://github.com/fhamborg/news-please/wiki/PyPI---How-to-upload-a-new-version
 # python setup.py sdist
 # python setup.py sdist upload
@@ -55,7 +56,7 @@ def main():
 
         #
         license="BSD",
-        description="WOS+ is a tools for to manage and merge database of Web Of Science",
+        description="WOS+ is a tool for to manage and merge bibliographic databases like Web Of Science or Scopus",
         
         long_description=open("README.md").read(),
 
