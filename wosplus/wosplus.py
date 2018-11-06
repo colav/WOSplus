@@ -106,7 +106,12 @@ class wosplus:
         self.drive_file=cfg['FILES']
         self.type=pd.Series()
         self.biblio=pd.Series()
-
+    def read_drive_file(self,file_name):
+        '''
+        Convert Google Drive File in a Pyton IO file object
+        '''
+        return download_file_from_google_drive(
+                self.drive_file.get(file_name) )
     def read_drive_excel(self,file_name,**kwargs):
         '''
         TODO: Make independent of the class!
@@ -141,6 +146,19 @@ class wosplus:
                 self.drive_file.get(file_name) ) ,**kwargs)  # ,{} is an accepted option
         else:
             return pd.read_excel(file_name,**kwargs)
+        
+    def read_drive_json(self,file_name,**kwargs):
+        '''
+        Generalization of the Pandas DataFrame read_excel method
+        to include google drive file names:
+         
+         Requires a self.drive_file dictionary intialized with the class.
+         See read_drive_excel help
+        '''
+        if self.drive_file.get(file_name):
+            return pd.read_json( self.read_drive_file(file_name),**kwargs)  # ,{} is an accepted option
+        else:
+            return pd.read_excel(file_name,**kwargs)        
     def load_biblio(self,WOS_file,prefix='WOS'):
         """
         Load WOS xlsx file, or if prefix is given:
