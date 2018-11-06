@@ -51,7 +51,7 @@ def check_hash(df,hashseries,in_hash,min_match=10):
         
             
 def columns_add_prefix(df,prefix):
-    return df.rename_axis( dict( (key,prefix+'_'+key) for key in df.columns.values) , axis=1)
+    return df.rename( dict( (key,prefix+'_'+key) for key in df.columns.values) , axis=1)
 
 def fill_NaN(df):
     '''Fill NaN entries with proper empty values
