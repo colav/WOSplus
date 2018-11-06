@@ -1,7 +1,0 @@
-configparser
-xlrd
-requests
-numpy
-pandas
-unidecode
-python-levenshtein
