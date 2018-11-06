@@ -190,7 +190,10 @@ class wosplus:
         #elif: #Other no WOS-like pures
 
         if not re.search('\.txt$',WOS_file):
-            WOS=self.read_drive_excel(WOS_file)
+            if re.search('\.json$',WOS_file):
+                WOS=self.read_drive_json(WOS_file)
+            else:
+                WOS=self.read_drive_excel(WOS_file)
         else:
             id_google_drive=self.drive_file.get('{}'.format(WOS_file))
             if id_google_drive:                                     
@@ -232,7 +235,8 @@ class wosplus:
 
         # Without prefix columns
         if 'Tipo' not in WOS and not re.search('_',prefix):
-            WOS['Tipo']=prefix
+            if prefix:
+                WOS['Tipo']=prefix
         else:
             print('WARNING: Biblio already has a "Tipo" column')
             
