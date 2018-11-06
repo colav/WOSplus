@@ -109,6 +109,9 @@ class wosplus:
     def read_drive_file(self,file_name):
         '''
         Convert Google Drive File in a Pyton IO file object
+        
+         Requires a self.drive_file dictionary intialized with the class.
+         See read_drive_excel help
         '''
         return download_file_from_google_drive(
                 self.drive_file.get(file_name) )
