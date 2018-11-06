@@ -235,8 +235,7 @@ class wosplus:
 
         # Without prefix columns
         if 'Tipo' not in WOS and not re.search('_',prefix):
-            if prefix:
-                WOS['Tipo']=prefix
+            WOS['Tipo']=prefix
         else:
             print('WARNING: Biblio already has a "Tipo" column')
             
