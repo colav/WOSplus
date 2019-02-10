@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-# Copyright (c) Juptyer Development Team.
+# Copyright (c) Colav.
 # Distributed under the terms of the Modified BSD License.
 
 #-----------------------------------------------------------------------------
@@ -19,7 +19,6 @@ from __future__ import print_function
 from setuptools import setup, find_packages
 
 import os
-import shutil
 import sys
 
 
@@ -58,8 +57,9 @@ def main():
 
         #
         license="BSD",
-        description="WOS+ is a tool for to manage and merge bibliographic databases like Web Of Science or Scopus",
         
+        description="WOS+ is a tool for to manage and merge bibliographic databases like Web Of Science or Scopus",
+
         long_description=open("README.md").read(),
 
         long_description_content_type="text/markdown",
