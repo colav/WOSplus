@@ -247,11 +247,11 @@ class wosplus:
                 left, right, self.__class__.__name__))
 
         if left not in self.biblio or right not in self.biblio:
-            sys.exit('ERROR: missing biblio Series in {}'.format(
+            sys.exit('ERROR: missing biblio Series in {} {} {}'.format(
                 left, right, self.__class__.__name__))
 
         if left not in self.type or right not in self.type:
-            sys.exit('ERROR: missing type Series in {}'.format(
+            sys.exit('ERROR: missing type Series in {} {} {}'.format(
                 left, right, self.__class__.__name__))
 
         left_df = self.biblio[left].copy()

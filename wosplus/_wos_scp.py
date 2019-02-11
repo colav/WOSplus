@@ -504,5 +504,5 @@ def get_doi(
                 if JSON:  # Overwrite upon previous doi
                     doi = rr.json()["message"]
 
-    time.sleep(random.randint(1, 3))
+    time.sleep(2)
     return doi
