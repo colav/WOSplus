@@ -1,7 +1,6 @@
 # WOS+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/15754745f8ed45eb8cdc3cf6b57a2393)](https://www.codacy.com/app/omazapa/WOSplus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=colav/WOSplus&amp;utm_campaign=Badge_Grade)
-
-<!-- [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e9e840f8451e4894884c70a6759ff3a6)](https://www.codacy.com/app/restrepo/WOSplus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=restrepo/WOSplus&amp;utm_campaign=Badge_Grade) -->
+[![Build Status](https://travis-ci.com/colav/WOSplus.svg?branch=master)](https://travis-ci.com/colav/WOSplus)
 
 Load databases from [Web of Science](https://www.webofknowledge.com), [Scopus](https://www.scopus.com), [Scielo](https://www.webofknowledge.com), etc, and combine the results into a single database
 
