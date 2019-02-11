@@ -214,14 +214,19 @@ def merge_with_close_matches(left, right, left_on='ST', right_on='UDEA_simple_t�
     return joined
 
 
-def merge_udea_points(original_df, target_df, check_columns=['UDEA_simple_title', 'UDEA_título', 'UDEA_título'],
-                      check_against_colums=['TI', 'SCP_Title', 'TI'],
+def merge_udea_points(original_df, target_df, check_columns=None,
+                      check_against_colums=None,
                       drop_not_UDEA_columns=True, old_extra_column='UDEA_nombre revista o premio',
                       new_extra_column='SO', DEBUG=False):
     '''
     # STEPS: 0:Simplified, 1:full title including translations, 2:reverse translation in UDEA  
     drop_not_UDEA_columns=True:  Remove other columns, if False remove UDEA_ ones
     '''
+    if check_columns == None:
+        check_columns = ['UDEA_simple_title', 'UDEA_título', 'UDEA_título']
+    if check_against_colums == None:
+        check_against_colums = ['TI', 'SCP_Title', 'TI']
+
     # Specific of STEP
     STEP = 0
     old = original_df  # 100
@@ -309,14 +314,19 @@ def merge_udea_points(original_df, target_df, check_columns=['UDEA_simple_title'
     return target_df_UDEA
 
 
-def merge_udea_points_new(original_df, target_df, check_columns=['UDEA_simple_title', 'UDEA_título', 'UDEA_título'],
-                          check_against_colums=['TI', 'SCP_Title', 'TI'],
+def merge_udea_points_new(original_df, target_df, check_columns=None,
+                          check_against_colums=None,
                           drop_not_UDEA_columns=True, old_extra_column='UDEA_nombre revista o premio',
                           new_extra_column='SO', how='inner', DEBUG=False):
     '''
     # STEPS: 0:Simplified, 1:full title including translations, 2:reverse translation in UDEA  
     drop_not_UDEA_columns=True:  Remove other columns, if False remove UDEA_ ones
     '''
+    if check_columns == None:
+        check_columns = ['UDEA_simple_title', 'UDEA_título', 'UDEA_título']
+    if check_against_colums == None:
+        check_against_colums = ['TI', 'SCP_Title', 'TI']
+
     # Specific of STEP
     STEP = 0
     old = original_df  # 100
