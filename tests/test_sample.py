@@ -6,7 +6,7 @@ WOS_file = 'CIB_Wos.xlsx'
 SCI_file = 'CIB_Scielo.xlsx'
 SCP_file = 'CIB_Scopus.csv'
 
-cib = wosplus('drive.cfg')
+cib = wosplus('tests/drive.cfg')
 
 cib.load_biblio(WOS_file)
 cib.load_biblio(SCI_file, prefix='SCI')
