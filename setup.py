@@ -4,9 +4,9 @@
 # Copyright (c) Colav.
 # Distributed under the terms of the Modified BSD License.
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Minimal Python version sanity check (from IPython)
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # See https://stackoverflow.com/a/26737258/2268280
 # sudo pip3 install twine
@@ -34,6 +34,7 @@ if os.name in ('nt', 'dos'):
     warning = "WARNING: Windows is not officially supported"
     print(warning, file=sys.stderr)
 
+
 def main():
     setup(
         # Application name:
@@ -57,13 +58,13 @@ def main():
 
         #
         license="BSD",
-        
+
         description="WOS+ is a tool for to manage and merge bibliographic databases like Web Of Science or Scopus",
 
         long_description=open("README.md").read(),
 
         long_description_content_type="text/markdown",
-        
+
         # Dependent packages (distributions)
         install_requires=[
             'configparser',
@@ -75,6 +76,7 @@ def main():
             'python-levenshtein',
         ],
     )
+
 
 if __name__ == "__main__":
     main()

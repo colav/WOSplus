@@ -2,7 +2,12 @@ import time
 import sys
 
 
-def get_close_matches_Levenshtein(word, possibilities, n=3, cutoff=0.6, full=False):
+def get_close_matches_Levenshtein(
+        word,
+        possibilities,
+        n=3,
+        cutoff=0.6,
+        full=False):
     '''Replaces difflib.get_close_matches with faster algortihm based on
        Levenshtein.ratio.
        HINT: Similarity increase significatively after lower() and unidecode()
@@ -28,7 +33,8 @@ def get_close_matches_Levenshtein(word, possibilities, n=3, cutoff=0.6, full=Fal
         rs = rs.sort_values(
             'similarity', ascending=False).reset_index(drop=True)
         if full:
-            return list(rs['match'][:n].values), list(rs['similarity'][:n].values)
+            return list(rs['match'][:n].values), list(
+                rs['similarity'][:n].values)
         else:
             return list(rs['match'][:n].values)
     else:
@@ -40,11 +46,11 @@ def get_close_matches_Levenshtein(word, possibilities, n=3, cutoff=0.6, full=Fal
 
 def check_hash(df, hashseries, in_hash, min_match=10):
     ''' hashseries obtained from dataframe df, e.g
-          hashseris=df.some_column.str.replace('\W+','').str.lower().map(unicode)
+          hashseris=df.some_column.str.replace(r'\W+','').str.lower().map(unicode)
         within which in_hash will be searched for match at least min_match characters
     '''
     comparision = True
-    for si in reversed(range(0, len(in_hash)+1)):
+    for si in reversed(range(0, len(in_hash) + 1)):
         chk = df[hashseries.str.match(in_hash[:si])]
         if chk.shape[0] > 0:
             return comparision, chk
@@ -55,7 +61,8 @@ def check_hash(df, hashseries, in_hash, min_match=10):
 
 
 def columns_add_prefix(df, prefix):
-    return df.rename_axis(dict((key, prefix+'_'+key) for key in df.columns.values), axis=1)
+    return df.rename_axis(dict((key, prefix + '_' + key)
+                               for key in df.columns.values), axis=1)
 
 
 def fill_NaN(df):
@@ -85,9 +92,14 @@ def read_excel_fill_NaN(*args, **kwargs):
 # To add to main publications object:
 
 
-def add_sjr_info_from_issn(self, SJR, column_issn='SN', SJR_column_journal='SJR_Title', SJR_column_issn='SJR_Issn'):
+def add_sjr_info_from_issn(
+        self,
+        SJR,
+        column_issn='SN',
+        SJR_column_journal='SJR_Title',
+        SJR_column_issn='SJR_Issn'):
     '''self is an publication object and SJR is the info for a journal in column SJR_Issn'''
-    if not SJR_column_journal in self.articles.columns:
+    if SJR_column_journal not in self.articles.columns:
         sys.exit("Run first the the more exact and fast add_sjr_info")
 
     self.articles = fill_NaN(self.articles)
@@ -105,9 +117,13 @@ def add_sjr_info_from_issn(self, SJR, column_issn='SN', SJR_column_journal='SJR_
     return self
 
 
-def add_sjr_info_from_journal(self, SJR, column_journal='SO', SJR_column_journal='SJR_Title'):
+def add_sjr_info_from_journal(
+        self,
+        SJR,
+        column_journal='SO',
+        SJR_column_journal='SJR_Title'):
     '''self is an publication object and SJR is the info for a journal in column SJR_Issn'''
-    if not SJR_column_journal in self.articles.columns:
+    if SJR_column_journal not in self.articles.columns:
         sys.exit("Run first the more exact and fast add_sjr_info")
 
     self.articles = fill_NaN(self.articles)
@@ -121,7 +137,7 @@ def add_sjr_info_from_journal(self, SJR, column_journal='SO', SJR_column_journal
         if hash_match:
             mtch = mtch.reset_index(drop=True)
             if mtch.shape[0] > 1:
-                newtitle = re.sub('\W+', ' ', title)
+                newtitle = re.sub(r'\W+', ' ', title)
                 mtch = SJR[SJR[SJR_column_journal].str.lower(
                 ).str.strip().str.match('%s ' % newtitle)]
                 if mtch.shape[0]:
@@ -136,11 +152,13 @@ def add_sjr_info_from_journal(self, SJR, column_journal='SO', SJR_column_journal
     return self
 
 
-def add_sjr_info(self, SJR, column_journal='SO', SJR_column_journal='SJR_Title'):
+def add_sjr_info(self, SJR, column_journal='SO',
+                 SJR_column_journal='SJR_Title'):
     '''self is an publication object and SJR is the info for a journal in column SJR_Title'''
     self.articles = self.articles.reset_index(drop=True)
-    for joa in np.intersect1d(self.articles[column_journal].str.lower().str.strip().unique(),
-                              SJR[SJR_column_journal].str.lower().str.strip().unique()):
+    for joa in np.intersect1d(
+            self.articles[column_journal].str.lower().str.strip().unique(),
+            SJR[SJR_column_journal].str.lower().str.strip().unique()):
         moa = self.articles[self.articles[column_journal].str.lower() == joa]
         if moa.shape[0]:
             mtch = SJR[SJR[SJR_column_journal].str.lower(
@@ -153,10 +171,18 @@ def add_sjr_info(self, SJR, column_journal='SO', SJR_column_journal='SJR_Title')
     return self
 
 
-def merge_with_close_matches(left, right, left_on='ST', right_on='UDEA_simple_título',
-                             left_extra_on='SO', right_extra_on='UDEA_nombre revista o premio',
-                             how='inner',
-                                 n=1, cutoff=0.6, full=True, cutoff_extra=0.6):
+def merge_with_close_matches(
+        left,
+        right,
+        left_on='ST',
+        right_on='UDEA_simple_título',
+        left_extra_on='SO',
+        right_extra_on='UDEA_nombre revista o premio',
+        how='inner',
+        n=1,
+        cutoff=0.6,
+        full=True,
+        cutoff_extra=0.6):
     '''For each entry of the column: left_on of DataFrame left (cannot have empty fields),
        try to find the close match inside each row of right DataFrame, by comparing with
        the right_on entry of the row. When a row match is found, the full right row is appended
@@ -191,14 +217,14 @@ def merge_with_close_matches(left, right, left_on='ST', right_on='UDEA_simple_t�
             mtch = right[possibilities == title[0]]
             # >=cutoff, e.g 0.65 0.95 0.81 0.86 0.9 0.96
             chk_cutoff = similarity[0]
-            crosscheck = cutoff+0.2  # 0.8 # e.g. 0.8 0.9 0.9 0.9 0.9 0.9
+            crosscheck = cutoff + 0.2  # 0.8 # e.g. 0.8 0.9 0.9 0.9 0.9 0.9
             if crosscheck >= 1:
                 # force check if match worst than this (by experience)
                 crosscheck = 0.95
             if chk_cutoff < crosscheck:  # e.g 0.65<0.8 0.95~<0.9 0.81~<0.0 0.86<0.9 0.91<~0.9 0.96~<0.9
-                if get_close_matches_Levenshtein(unidecode(left[left_extra_on][i].lower()),
-                                                 [unidecode(mtch[right_extra_on][mtch.index[0]].lower())], cutoff=cutoff_extra):  # cutoff=0.6
-                    chk_cutoff = crosscheck+0.1
+                if get_close_matches_Levenshtein(unidecode(left[left_extra_on][i].lower()), [unidecode(
+                        mtch[right_extra_on][mtch.index[0]].lower())], cutoff=cutoff_extra):  # cutoff=0.6
+                    chk_cutoff = crosscheck + 0.1
             if chk_cutoff >= crosscheck:
                 joined_series = joined_series.append(mtch.loc[mtch.index[0]])
                 if how == 'outer':
@@ -214,17 +240,22 @@ def merge_with_close_matches(left, right, left_on='ST', right_on='UDEA_simple_t�
     return joined
 
 
-def merge_udea_points(original_df, target_df, check_columns=None,
-                      check_against_colums=None,
-                      drop_not_UDEA_columns=True, old_extra_column='UDEA_nombre revista o premio',
-                      new_extra_column='SO', DEBUG=False):
+def merge_udea_points(
+        original_df,
+        target_df,
+        check_columns=None,
+        check_against_colums=None,
+        drop_not_UDEA_columns=True,
+        old_extra_column='UDEA_nombre revista o premio',
+        new_extra_column='SO',
+        DEBUG=False):
     '''
-    # STEPS: 0:Simplified, 1:full title including translations, 2:reverse translation in UDEA  
+    # STEPS: 0:Simplified, 1:full title including translations, 2:reverse translation in UDEA
     drop_not_UDEA_columns=True:  Remove other columns, if False remove UDEA_ ones
     '''
-    if check_columns == None:
+    if check_columns is None:
         check_columns = ['UDEA_simple_title', 'UDEA_título', 'UDEA_título']
-    if check_against_colums == None:
+    if check_against_colums is None:
         check_against_colums = ['TI', 'SCP_Title', 'TI']
 
     # Specific of STEP
@@ -237,9 +268,17 @@ def merge_udea_points(original_df, target_df, check_columns=None,
 
     st = time.time()
 
-    joined = merge_with_close_matches(old, new, old_column, new_column, old_extra_column, new_extra_column,
-                                      n=1, cutoff=0.6, full=True)
-    print(time.time()-st)
+    joined = merge_with_close_matches(
+        old,
+        new,
+        old_column,
+        new_column,
+        old_extra_column,
+        new_extra_column,
+        n=1,
+        cutoff=0.6,
+        full=True)
+    print(time.time() - st)
     joined = fill_NaN(joined)
     if DEBUG:
         print('check final shape after STEP %d: %d' % (STEP, joined.shape[0]))
@@ -249,7 +288,7 @@ def merge_udea_points(original_df, target_df, check_columns=None,
 
     if DEBUG:
         print(STEP, '->', udea_found.shape, original_df.shape,
-              udea_found.shape[0]+original_df.shape[0])
+              udea_found.shape[0] + original_df.shape[0])
 
     original_df_not_scp_title = original_df[original_df.SCP_Title == ''].reset_index(
         drop=True)  # 33
@@ -259,7 +298,7 @@ def merge_udea_points(original_df, target_df, check_columns=None,
           original_df_not_scp_title.shape[0], original_df.shape[0])
     if DEBUG:
         print(STEP, '->', original_df_not_scp_title.shape, original_df.shape,
-              original_df_not_scp_title.shape[0]+original_df.shape[0])
+              original_df_not_scp_title.shape[0] + original_df.shape[0])
 
     for STEP in [1, 2]:
         for k in original_df.columns:
@@ -277,9 +316,17 @@ def merge_udea_points(original_df, target_df, check_columns=None,
 
         st = time.time()
 
-        joined = merge_with_close_matches(old, new, old_column, new_column, old_extra_column, new_extra_column,
-                                          n=1, cutoff=0.6, full=True)
-        print(time.time()-st)
+        joined = merge_with_close_matches(
+            old,
+            new,
+            old_column,
+            new_column,
+            old_extra_column,
+            new_extra_column,
+            n=1,
+            cutoff=0.6,
+            full=True)
+        print(time.time() - st)
 
         joined = fill_NaN(joined)
 
@@ -295,8 +342,10 @@ def merge_udea_points(original_df, target_df, check_columns=None,
             else:
                 original_df = joined[joined[new_column] == '']  # 2:51
             if DEBUG:
-                print(STEP, ':::>', joined[joined[new_column] !=
-                                           ''].shape[0], joined[joined[new_column] == ''].shape[0])
+                print(STEP,
+                      ':::>',
+                      joined[joined[new_column] != ''].shape[0],
+                      joined[joined[new_column] == ''].shape[0])
         else:  # 1: True; 2: False
             # udea found is the same because not new mathc was found
             if STEP == 1:
@@ -314,17 +363,23 @@ def merge_udea_points(original_df, target_df, check_columns=None,
     return target_df_UDEA
 
 
-def merge_udea_points_new(original_df, target_df, check_columns=None,
-                          check_against_colums=None,
-                          drop_not_UDEA_columns=True, old_extra_column='UDEA_nombre revista o premio',
-                          new_extra_column='SO', how='inner', DEBUG=False):
+def merge_udea_points_new(
+        original_df,
+        target_df,
+        check_columns=None,
+        check_against_colums=None,
+        drop_not_UDEA_columns=True,
+        old_extra_column='UDEA_nombre revista o premio',
+        new_extra_column='SO',
+        how='inner',
+        DEBUG=False):
     '''
-    # STEPS: 0:Simplified, 1:full title including translations, 2:reverse translation in UDEA  
+    # STEPS: 0:Simplified, 1:full title including translations, 2:reverse translation in UDEA
     drop_not_UDEA_columns=True:  Remove other columns, if False remove UDEA_ ones
     '''
-    if check_columns == None:
+    if check_columns is None:
         check_columns = ['UDEA_simple_title', 'UDEA_título', 'UDEA_título']
-    if check_against_colums == None:
+    if check_against_colums is None:
         check_against_colums = ['TI', 'SCP_Title', 'TI']
 
     # Specific of STEP
@@ -337,9 +392,18 @@ def merge_udea_points_new(original_df, target_df, check_columns=None,
 
     st = time.time()
 
-    joined = merge_with_close_matches(old, new, old_column, new_column, old_extra_column, new_extra_column,
-                                      how=how, n=1, cutoff=0.6, full=True)
-    print(time.time()-st)
+    joined = merge_with_close_matches(
+        old,
+        new,
+        old_column,
+        new_column,
+        old_extra_column,
+        new_extra_column,
+        how=how,
+        n=1,
+        cutoff=0.6,
+        full=True)
+    print(time.time() - st)
     joined = fill_NaN(joined)
     if DEBUG:
         print('check final shape after STEP %d: %d' % (STEP, joined.shape[0]))
@@ -349,7 +413,7 @@ def merge_udea_points_new(original_df, target_df, check_columns=None,
 
     if DEBUG:
         print(STEP, '->', udea_found.shape, original_df.shape,
-              udea_found.shape[0]+original_df.shape[0])
+              udea_found.shape[0] + original_df.shape[0])
 
     original_df_not_scp_title = original_df[original_df.SCP_Title == ''].reset_index(
         drop=True)  # 33
@@ -359,7 +423,7 @@ def merge_udea_points_new(original_df, target_df, check_columns=None,
           original_df_not_scp_title.shape[0], original_df.shape[0])
     if DEBUG:
         print(STEP, '->', original_df_not_scp_title.shape, original_df.shape,
-              original_df_not_scp_title.shape[0]+original_df.shape[0])
+              original_df_not_scp_title.shape[0] + original_df.shape[0])
 
     for STEP in [1, 2]:
         for k in original_df.columns:
@@ -377,9 +441,18 @@ def merge_udea_points_new(original_df, target_df, check_columns=None,
 
         st = time.time()
 
-        joined = merge_with_close_matches(old, new, old_column, new_column, old_extra_column, new_extra_column,
-                                          how=how, n=1, cutoff=0.6, full=True)
-        print(time.time()-st)
+        joined = merge_with_close_matches(
+            old,
+            new,
+            old_column,
+            new_column,
+            old_extra_column,
+            new_extra_column,
+            how=how,
+            n=1,
+            cutoff=0.6,
+            full=True)
+        print(time.time() - st)
 
         joined = fill_NaN(joined)
 
@@ -395,8 +468,10 @@ def merge_udea_points_new(original_df, target_df, check_columns=None,
             else:
                 original_df = joined[joined[new_column] == '']  # 2:51
             if DEBUG:
-                print(STEP, ':::>', joined[joined[new_column] !=
-                                           ''].shape[0], joined[joined[new_column] == ''].shape[0])
+                print(STEP,
+                      ':::>',
+                      joined[joined[new_column] != ''].shape[0],
+                      joined[joined[new_column] == ''].shape[0])
         else:  # 1: True; 2: False
             # udea found is the same because not new mathc was found
             if STEP == 1:
@@ -436,7 +511,7 @@ def get_doi(
 
       For other possible check_mesagges_key's, see in a browser the several keys of the 'mesagges'
       dictionary at:
-         https://api.crossref.org/v1/works/DOI, 
+         https://api.crossref.org/v1/works/DOI,
       for example:
          https://api.crossref.org/v1/works/10.1103/physrevd.87.095010
 
@@ -472,12 +547,12 @@ def get_doi(
             search = surname
         if title:
             if len(search) > 0:
-                search = search+', '+title
+                search = search + ', ' + title
             else:
-                search = search+title
+                search = search + title
         if other:
             if len(search) > 0:
-                search = search+', '+other
+                search = search + ', ' + other
 
         r = requests.get('http://search.crossref.org/?q=%s' % search)
         urldoi = 'http://dx.doi.org/'
@@ -489,15 +564,16 @@ def get_doi(
             DOI = ''
     if DOI:
         json = 'https://api.crossref.org/v1/works/'
-        rr = requests.get(json+DOI)
+        rr = requests.get(json + DOI)
         if rr.status_code == 200:
             if 'message' in rr.json():
                 if check_mesagges_key in rr.json()['message']:
                     if len(rr.json()["message"][check_mesagges_key]):
-                        chk = get_close_matches_Levenshtein(check_text,
-                                                            rr.json()[
-                                                                "message"][check_mesagges_key][0].lower(),
-                                                            n=1, cutoff=similarity)
+                        chk = get_close_matches_Levenshtein(
+                            check_text,
+                            rr.json()["message"][check_mesagges_key][0].lower(),
+                            n=1,
+                            cutoff=similarity)
                         if chk:
                             if "DOI" in rr.json()["message"]:
                                 doi = rr.json()["message"]["DOI"]

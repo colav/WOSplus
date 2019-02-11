@@ -31,13 +31,13 @@ def DataFame_to_pajek(
     """
        ========= WOS to Pajek ==============
 
-       From a DataFrame with the columns of Web of Science txt file, 
+       From a DataFrame with the columns of Web of Science txt file,
        convert the data from an emisor and a receptor WOS identifiers
-       (see sample input below), into a Pajek .net file. 
+       (see sample input below), into a Pajek .net file.
 
-       Also returns a simplified DataFrame with emisor (receptor) column, 
-       the corresponding emisor (receptor) index starting from 1 
-       (number of emisor entries + 1), along with the edges of the network. 
+       Also returns a simplified DataFrame with emisor (receptor) column,
+       the corresponding emisor (receptor) index starting from 1
+       (number of emisor entries + 1), along with the edges of the network.
 
     Input:
 
@@ -55,31 +55,33 @@ def DataFame_to_pajek(
     """
 
     if pajek_file.find('.net') == -1:
-        pajek_file = pajek_file+'.net'
+        pajek_file = pajek_file + '.net'
     wos = wos_dataframe
-    wos[emisor_index] = wos.index.values+1
+    wos[emisor_index] = wos.index.values + 1
     wos[receptor_column] = wos[receptor_column].str.strip()
 
     CR = pd.DataFrame()
     step = 10
-    print(wos.shape[0]-step)
+    print(wos.shape[0] - step)
     for i in wos.index:
         if i % step == 0:
             print(i, end='\r')
 
         cr = wos.loc[i, receptor_column].split(receptor_separator)
-        tmp = pd.DataFrame({emisor_index: wos.loc[i, emisor_index]*np.ones(len(cr)).astype(int),
+        tmp = pd.DataFrame({emisor_index: wos.loc[i,
+                                                  emisor_index] * np.ones(len(cr)).astype(int),
                             receptor: cr,
-                            emisor_column: ((wos.loc[i, emisor_column].strip()+':::')*len(cr)).split(':::')[:-1]})
+                            emisor_column: ((wos.loc[i,
+                                                     emisor_column].strip() + ':::') * len(cr)).split(':::')[:-1]})
         CR = CR.append(tmp).reset_index(drop=True)
 
     CR_u = CR.drop_duplicates(receptor).reset_index(drop=True)
-    CR_u[receptor_index] = CR_u.index.values+1+wos.shape[0]
+    CR_u[receptor_index] = CR_u.index.values + 1 + wos.shape[0]
     RR = CR_u[[receptor_index, receptor]]
     vinc = CR.merge(RR, on=receptor, how='left')
     vinc = vinc.sort_values(receptor).reset_index(drop=True)
     vinc['Edges'] = vinc[emisor_index].astype(
-        str)+' '+vinc[receptor_index].astype(str)+' '+'1'
+        str) + ' ' + vinc[receptor_index].astype(str) + ' ' + '1'
 
     # write file:
     a1 = vinc[[emisor_index, emisor_column]].drop_duplicates(
@@ -93,7 +95,7 @@ def DataFame_to_pajek(
     a3 = vinc[['Edges']]
 
     f = open(pajek_file, 'w')
-    f.write('*Vertices %d %d\n' % (CR_u.shape[0]+wos.shape[0], wos.shape[0]))
+    f.write('*Vertices %d %d\n' % (CR_u.shape[0] + wos.shape[0], wos.shape[0]))
     a1.to_csv(f, sep=' ', header=False, index=False)
     a2.to_csv(f, sep=' ', header=False, index=False)
     f.write('*Edges\n')
@@ -117,12 +119,12 @@ def wos_to_pajek(
        ========= WOS to Pajek ==============
 
        From the google drive key of a Web of Science txt file with public link,
-       convert the data from an emisor and a receptor WOS identifiers 
-       (see sample input below), into a Pajek .net file. 
+       convert the data from an emisor and a receptor WOS identifiers
+       (see sample input below), into a Pajek .net file.
 
-       Also returns a simplified DataFrame with emisor (receptor) column, 
-       the corresponding emisor (receptor) index starting from 1 
-       (number of emisor entries + 1), along with the edges of the network. 
+       Also returns a simplified DataFrame with emisor (receptor) column,
+       the corresponding emisor (receptor) index starting from 1
+       (number of emisor entries + 1), along with the edges of the network.
 
     Input:
 
