@@ -450,7 +450,7 @@ def get_doi(
     '''
     import requests
     # import time imported globally
-    import random
+    import numpy as np
 
     if not check_text:
         check_text = title.lower()
@@ -504,5 +504,5 @@ def get_doi(
                 if JSON:  # Overwrite upon previous doi
                     doi = rr.json()["message"]
 
-    time.sleep(2)
+    time.sleep(np.random.randint(1, 3))
     return doi
