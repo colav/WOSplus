@@ -10,22 +10,22 @@ WARNING: Only  Google Drive id's are used here! Not file names.
 '''
 
 
-def pandas_from_google_drive_csv(id, gss_sheet=0, gss_query=None):
+def pandas_from_google_drive_csv(gid, gss_sheet=0, gss_query=None):
     '''
     Read Google spread sheet by id.
     Options:
        gss_sheet=N : if in old format select the N-sheet
        gss_query=SQL_command: Filter with some SQL command
-       example 
+       example
          SQL_command: 'select B,D,E,F,I where (H contains 'GFIF') order by D desc'
     '''
     import pandas as pd
     if not gss_query:
         url = 'https://docs.google.com/spreadsheets/d/%s/gviz/tq?tqx=out:csv&gid=%s' % (
-            id, gss_sheet)
+            gid, gss_sheet)
     else:
         url = 'https://docs.google.com/spreadsheets/d/%s/gviz/tq?tqx=out:csv&gid=%s&tq=%s' % (
-            id, gss_sheet, gss_query)
+            gid, gss_sheet, gss_query)
     r = requests.get(url)
     if r.status_code == 200:
         # or directly  with: urllib.request.urlopen(url)
@@ -35,7 +35,7 @@ def pandas_from_google_drive_csv(id, gss_sheet=0, gss_query=None):
 
 def save_response_content(response, file=None):
     '''
-    See help from 
+    See help from
     download_public_drive_file(...)
     '''
     CHUNK_SIZE = 32768
@@ -47,7 +47,7 @@ def save_response_content(response, file=None):
         chunks = b''
         for chunk in response.iter_content(CHUNK_SIZE):
             if chunk:  # filter out keep-alive new chunks
-                chunks = chunks+chunk
+                chunks = chunks + chunk
 
         try:
             ior = io.StringIO(chunks.decode())  # .read()
@@ -58,14 +58,15 @@ def save_response_content(response, file=None):
         return ior
 
 
-def download_public_drive_file(file=None, id='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os'):
+def download_public_drive_file(file=None,
+                               gid='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os'):
     '''
     Download file from Google Drive public id
-    If 
+    If
       file=None
-    returns: 
+    returns:
       * File object for a binary file
-        Example: 
+        Example:
           import pandas as pd
           pd.read_excel(  download_public_drive_file(id='0BxoOXsn2EUNIMldPUFlwNkdLOTQ')  )[:1]
 
@@ -74,7 +75,7 @@ def download_public_drive_file(file=None, id='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os'
           print( download_public_drive_file(id='1snzdsa-RLwYIf8MUffauaD2ZjNr1U2Os').read()[:200] )
     '''
     response = requests.get(
-        'https://docs.google.com/uc?export=download&id='+id)
+        'https://docs.google.com/uc?export=download&id=' + gid)
     return save_response_content(response, file=file)
 
 
@@ -95,7 +96,7 @@ def download_file_from_google_drive(gid, destination=None, binary=True):
     token = get_confirm_token(response)
 
     if token:
-        params = {'id': id, 'confirm': token}
+        params = {'id': gid, 'confirm': token}
         response = session.get(URL, params=params, stream=True)
 
     # Deprecated: binary
@@ -117,10 +118,10 @@ def download_file_from_local_drive(localfile, destination=None, binary=True):
 
     session.mount('file://', LocalFileAdapter())
 
-    r = requests_session.get('file://./Sample_WOS.txt')
+    #r = requests_session.get('file://./Sample_WOS.txt')
 
-    response = session.get(URL+'./'+localfile)
-    token = get_confirm_token(response)
+    response = session.get(URL + './' + localfile)
+    #token = get_confirm_token(response)
 
     # DEPRECATED: binary
     return save_response_content(response, file=destination)
@@ -146,7 +147,7 @@ def old_save_response_content(response, destination=None, binary=True):
             if destination:
                 f.write(chunk)
             else:
-                chunks = chunks+chunk
+                chunks = chunks + chunk
     if destination:
         f.close()  # writes the file
     else:

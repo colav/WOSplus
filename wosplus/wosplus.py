@@ -30,10 +30,19 @@ def grep(pattern, multilinestring):
     return '\n'.join([g.group(0) for g in grp])
 
 
-def merge_inner_interior_exterior(LEFT, RIGHT, on_condition='SCP_DOI', left_on='ST', right_on='Simple_Title',
-                                  left_series=pd.Series(), right_series=pd.Series(),
-                                  left_extra_on='SO', right_extra_on='UDEA_nombre revista o premio',
-                                  close_matches=False, cutoff=0.6, cutoff_extra=0.6):
+def merge_inner_interior_exterior(
+        LEFT,
+        RIGHT,
+        on_condition='SCP_DOI',
+        left_on='ST',
+        right_on='Simple_Title',
+        left_series=pd.Series(),
+        right_series=pd.Series(),
+        left_extra_on='SO',
+        right_extra_on='UDEA_nombre revista o premio',
+        close_matches=False,
+        cutoff=0.6,
+        cutoff_extra=0.6):
     '''
     Given a df LEFT and a RIGHT[RIGHT[on_condition]!=''] fully True, then
     Get a tuple with the following 3 dataframes
@@ -52,7 +61,10 @@ def merge_inner_interior_exterior(LEFT, RIGHT, on_condition='SCP_DOI', left_on='
                                                     left_extra_on=left_extra_on, right_extra_on=right_extra_on,
                                                     close_matches=close_matches, cutoff=cutoff, cutoff_extra=cutoff_extra)
         if LEFT.shape[0] >= interior.shape[0] and RIGHT.shape[0] >= exterior.shape[0]:
-            return inner.reset_index(drop=True), interior.reset_index(drop=True), exterior.reset_index(drop=True)
+            return inner.reset_index(
+                drop=True), interior.reset_index(
+                drop=True), exterior.reset_index(
+                drop=True)
     else:
         return (pd.DataFrame(), pd.DataFrame(), pd.DataFrame())
 
@@ -84,7 +96,7 @@ class wosplus:
     Currently implenented:
       * WOS: two characters columns
       * SCI: prefixed SCI_ columns is returned
-      * SCP: prefixed SCP_ columns is returned 
+      * SCP: prefixed SCP_ columns is returned
     and any combinantion
     of them keeping the same ordering.
 
@@ -101,10 +113,13 @@ class wosplus:
         cfg = ConfigParser()
         cfg.optionxform = str
         if cfg_file:
-            tmp = cfg.read(cfg_file)
+            #tmp = cfg.read(cfg_file)
+            cfg.read(cfg_file)
         else:
-            tmp = cfg.read_dict({'FILES':
-                                 {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
+            # tmp = cfg.read_dict({'FILES':
+                                 # {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
+            cfg.read_dict(
+                {'FILES': {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
 
         self.drive_file = cfg['FILES']
         self.type = pd.Series()
@@ -131,7 +146,7 @@ class wosplus:
           Sample_WOS.xlsx = 0BxoOXsn2EUNIMldPUFlwNkdLOTQ
         '''
         # Try to load Google spreadsheet if extension is csv
-        if re.search('\.csv$', file_name):
+        if re.search(r'\.csv$', file_name):
             if self.drive_file.get(file_name):
                 return pandas_from_google_drive_csv(
                     self.drive_file.get(file_name), **kwargs)
@@ -140,8 +155,10 @@ class wosplus:
 
         # Try to load xlsx file if file extension is not csv
         if self.drive_file.get(file_name):
-            return pd.read_excel(download_file_from_google_drive(
-                self.drive_file.get(file_name)), **kwargs)  # ,{} is an accepted option
+            return pd.read_excel(
+                download_file_from_google_drive(
+                    self.drive_file.get(file_name)),
+                **kwargs)  # ,{} is an accepted option
         else:
             return pd.read_excel(file_name, **kwargs)
 
@@ -159,7 +176,7 @@ class wosplus:
             DOI = 'DOI'
         # elif: #Other no WOS-like pures
 
-        if not re.search('\.txt$', WOS_file):
+        if not re.search(r'\.txt$', WOS_file):
             WOS = self.read_drive_excel(WOS_file)
         else:
             id_google_drive = self.drive_file.get('{}'.format(WOS_file))
@@ -215,7 +232,7 @@ class wosplus:
               right_author=None, right_year=None,
               DEBUG=False):
         """
-        Merge left and right bibliographic dataframes by TYPE and with 
+        Merge left and right bibliographic dataframes by TYPE and with
         Python merge ooption: `how='outer'`.
 
         The TYPE must coincide with the Object attribute Dataframe: eg:
@@ -257,7 +274,7 @@ class wosplus:
         left_df = self.biblio[left].copy()
         right_df = self.biblio[right].copy()
         if DEBUG:
-            print('intial: {}'.format(left_df.shape[0]+right_df.shape[0]))
+            print('intial: {}'.format(left_df.shape[0] + right_df.shape[0]))
         if left == 'WOS' or re.search('^WOS_', left):
             left_DOI = 'DI'
             left_TI = 'TI'
@@ -276,7 +293,7 @@ class wosplus:
             right_author = 'SCI_AU'
             right_year = 'SCI_PY'
         elif right == 'SCP':
-            if 'SCP_Title' in right_df and not 'SCP_Title_0' in right_df:
+            if 'SCP_Title' in right_df and 'SCP_Title_0' not in right_df:
                 right_df = split_translated_columns(
                     right_df.copy(), on='SCP_Title', sep='\[', min_title=16)
             right_DOI = 'SCP_DOI'
@@ -302,14 +319,19 @@ class wosplus:
         LEFT_series = clean(LEFT[LEFT_on])
         RIGHT_series = clean(RIGHT[RIGHT_on])
 
-        LR = merge_inner_interior_exterior(LEFT.copy(), RIGHT.copy(),
-                                           on_condition=RIGHT_on, left_on='LEFT_simple_doi', right_on='RIGHT_simple_doi',
-                                           left_series=LEFT_series, right_series=RIGHT_series)
+        LR = merge_inner_interior_exterior(
+            LEFT.copy(),
+            RIGHT.copy(),
+            on_condition=RIGHT_on,
+            left_on='LEFT_simple_doi',
+            right_on='RIGHT_simple_doi',
+            left_series=LEFT_series,
+            right_series=RIGHT_series)
         if LR[0].shape[0]:
             # LEFT.shape[0]=inner.shape[0]+new_LEFT.shape[0]
             inner, new_LEFT, new_RIGHT = LR
             # RIGHT.shape[0]=inner.shape[0]+new_RIGHT.shape[0]
-            inner['Tipo'] = inner['Tipo']+'_{}'.format(right)
+            inner['Tipo'] = inner['Tipo'] + '_{}'.format(right)
             LEFT_RIGHT_inner = LEFT_RIGHT_inner.append(
                 inner).reset_index(drop=True)
         else:
@@ -327,8 +349,8 @@ class wosplus:
 
         # Merge on (splitted) Titles: generated with 'split_translated_columns' before
         # next_RIGHT have column information even if empty
-        for nTI in [right_TI]+[x for x in next_RIGHT.columns
-                               if re.search('{}_[0-9]+'.format(right_TI), x)]:
+        for nTI in [right_TI] + [x for x in next_RIGHT.columns
+                                 if re.search('{}_[0-9]+'.format(right_TI), x)]:
             RIGHT_on = nTI
             full_RIGHT = new_RIGHT.append(next_RIGHT)
             RIGHT, next_RIGHT = df_split(
@@ -339,12 +361,17 @@ class wosplus:
             LEFT = new_LEFT
             LEFT_series = clean(LEFT[left_TI])
 
-            LR = merge_inner_interior_exterior(LEFT.copy(), RIGHT.copy(),
-                                               on_condition=RIGHT_on, left_on='LEFT_Simple_title', right_on='RIGHT_Simple_title',
-                                               left_series=LEFT_series, right_series=RIGHT_series)
+            LR = merge_inner_interior_exterior(
+                LEFT.copy(),
+                RIGHT.copy(),
+                on_condition=RIGHT_on,
+                left_on='LEFT_Simple_title',
+                right_on='RIGHT_Simple_title',
+                left_series=LEFT_series,
+                right_series=RIGHT_series)
             if LR[0].shape[0]:
                 inner, new_LEFT, new_RIGHT = LR
-                inner['Tipo'] = inner['Tipo']+'_{}'.format(right)
+                inner['Tipo'] = inner['Tipo'] + '_{}'.format(right)
                 LEFT_RIGHT_inner = LEFT_RIGHT_inner.append(
                     inner).reset_index(drop=True)
             else:
@@ -360,8 +387,8 @@ class wosplus:
                     new_RIGHT)).append(next_RIGHT).shape)
 
         # Merge on Similar Titles
-        for nTI in [right_TI]+[x for x in next_RIGHT.columns
-                               if re.search('{}_[0-9]+'.format(right_TI), x)]:
+        for nTI in [right_TI] + [x for x in next_RIGHT.columns
+                                 if re.search('{}_[0-9]+'.format(right_TI), x)]:
             RIGHT_on = nTI
             full_RIGHT = new_RIGHT.append(next_RIGHT)
             RIGHT, next_RIGHT = df_split(
@@ -373,14 +400,21 @@ class wosplus:
             LEFT = new_LEFT
             LEFT_series = clean(LEFT[left_TI])
 
-            LR = merge_inner_interior_exterior(LEFT.copy(), RIGHT.copy(),
-                                               on_condition=RIGHT_on, left_on='LEFT_Simple_title', right_on='RIGHT_Simple_title',
-                                               left_series=LEFT_series, right_series=RIGHT_series,
-                                               left_extra_on=left_extra_journal, right_extra_on=right_extra_journal,
-                                               close_matches=True, cutoff=0.6)
+            LR = merge_inner_interior_exterior(
+                LEFT.copy(),
+                RIGHT.copy(),
+                on_condition=RIGHT_on,
+                left_on='LEFT_Simple_title',
+                right_on='RIGHT_Simple_title',
+                left_series=LEFT_series,
+                right_series=RIGHT_series,
+                left_extra_on=left_extra_journal,
+                right_extra_on=right_extra_journal,
+                close_matches=True,
+                cutoff=0.6)
             if LR[0].shape[0]:
                 inner, new_LEFT, new_RIGHT = LR
-                inner['Tipo'] = inner['Tipo']+'_{}'.format(right)
+                inner['Tipo'] = inner['Tipo'] + '_{}'.format(right)
                 LEFT_RIGHT_inner = LEFT_RIGHT_inner.append(
                     inner).reset_index(drop=True)
             else:

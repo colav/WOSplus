@@ -8,9 +8,16 @@ except (SystemError, ImportError):
     from _wos_scp import *
 
 
-def df_split(dff, on, on_contains=None, Operator=None, condition=None, on_condition=None, on_not_condition=False):
+def df_split(
+        dff,
+        on,
+        on_contains=None,
+        Operator=None,
+        condition=None,
+        on_condition=None,
+        on_not_condition=False):
     """
-    After divide df DataFrame in two parts acording either a condition or str.contains or 
+    After divide df DataFrame in two parts acording either a condition or str.contains or
     check for empty string in the column 'on':
     The pair of returned dataframes corresponds to
     * on_contains='text' -> True,False
@@ -20,9 +27,9 @@ def df_split(dff, on, on_contains=None, Operator=None, condition=None, on_condit
     """
     import sys
     import operator
-    otrue = {">":  operator.gt, ">=": operator.ge, "<":  operator.lt,
+    otrue = {">": operator.gt, ">=": operator.ge, "<": operator.lt,
              "<=": operator.le, "!=": operator.ne, "==": operator.eq}
-    ofalse = {">":  operator.le, ">=": operator.lt, "<":  operator.ge,
+    ofalse = {">": operator.le, ">=": operator.lt, "<": operator.ge,
               "<=": operator.gt, "!=": operator.eq, "==": operator.ne}
     if on_not_condition:
         Operator = '!='
@@ -47,26 +54,39 @@ def df_split(dff, on, on_contains=None, Operator=None, condition=None, on_condit
     return df_pureLEFT, df_pureRIGHT
 
 
-def cp_RIGHTcolumn_to_LEFTcolumn(df, on='UT', on_contains=None, on_condition=None, on_not_condition=False,
-                                 left='AU', right='SCP_Authors'):
+def cp_RIGHTcolumn_to_LEFTcolumn(
+        df,
+        on='UT',
+        on_contains=None,
+        on_condition=None,
+        on_not_condition=False,
+        left='AU',
+        right='SCP_Authors'):
     """
     After divide df DataFrame in two parts acording either a condition or str.contains on
-    the column 'on': 
+    the column 'on':
     cp one the column 'right' of the second part into the column 'left' of the second part.
     Returns the full dataframe organized according to the criteria in the 'on' column
     """
-    df_pureLEFT, df_pureRIGHT = df_split(df, on, on_contains=on_contains,
-                                         on_condition=on_condition, on_not_condition=on_not_condition)
+    df_pureLEFT, df_pureRIGHT = df_split(
+        df, on, on_contains=on_contains, on_condition=on_condition, on_not_condition=on_not_condition)
     df_pureRIGHT[left] = df_pureRIGHT[right]
 
     return fill_NaN(df_pureLEFT.append(df_pureRIGHT, ignore_index=True))
 
 
-def merge_by_series(left, right,
-                    left_on='ST', right_on='Simple_Title',
-                    left_series=pd.Series(), right_series=pd.Series(),
-                    left_extra_on='SO', right_extra_on='UDEA_nombre revista o premio',
-                    close_matches=False, cutoff=0.6, cutoff_extra=0.6):
+def merge_by_series(
+        left,
+        right,
+        left_on='ST',
+        right_on='Simple_Title',
+        left_series=pd.Series(),
+        right_series=pd.Series(),
+        left_extra_on='SO',
+        right_extra_on='UDEA_nombre revista o premio',
+        close_matches=False,
+        cutoff=0.6,
+        cutoff_extra=0.6):
     '''
     Merge with outer but returning left-inner, inner, right-inner
     WARNING: right_on cannot be empty
@@ -86,9 +106,18 @@ def merge_by_series(left, right,
         kk = fill_NaN(left.merge(right, how='outer',
                                  left_on=left_on, right_on=right_on))
     else:
-        kk = fill_NaN(merge_with_close_matches(left, right, left_on=left_on, right_on=right_on,
-                                               left_extra_on=left_extra_on, right_extra_on=right_extra_on, how='outer', cutoff=cutoff, full=True,
-                                               cutoff_extra=cutoff_extra))
+        kk = fill_NaN(
+            merge_with_close_matches(
+                left,
+                right,
+                left_on=left_on,
+                right_on=right_on,
+                left_extra_on=left_extra_on,
+                right_extra_on=right_extra_on,
+                how='outer',
+                cutoff=cutoff,
+                full=True,
+                cutoff_extra=cutoff_extra))
 
     new_left = kk[kk[right_on] == ''].drop(right_keys, axis='columns')
     if left_series.shape[0] or right_series.shape[0]:
@@ -106,7 +135,10 @@ def merge_by_series(left, right,
     # if left_series.shape[0] and right_series.shape[0]:
     #    left=left.drop(left_on,axis='columns')
 
-    return new_left.reset_index(drop=True), inner.reset_index(drop=True), new_right.reset_index(drop=True)
+    return new_left.reset_index(
+        drop=True), inner.reset_index(
+        drop=True), new_right.reset_index(
+            drop=True)
 
 
 def clean(pds):
@@ -117,15 +149,20 @@ def clean(pds):
         return pds
 
 
-def split_translated_columns(df, on='SCP_Title', sep='\[', min_title=10, initialize=''):
-    ''' 
+def split_translated_columns(
+        df,
+        on='SCP_Title',
+        sep=r'\[',
+        min_title=10,
+        initialize=''):
+    '''
     Creates new columns with the splite results of translates titles in the format lang1 `sep`lang2]`sep`.
     The new colums are called `on`_0 (not translated) `on`_1, and `on`_2.
     '''
-    if sep == '\[':
-        trail = '\]'
-    elif sep == '\(':
-        trail = '\)'
+    if sep == r'\[':
+        trail = r'\]'
+    elif sep == r'\(':
+        trail = r'\)'
     else:
         trail = ''
 
@@ -133,8 +170,10 @@ def split_translated_columns(df, on='SCP_Title', sep='\[', min_title=10, initial
              ][on].str.split('\s%s' % sep).str[0]
     it1 = df[df[on].str.contains('.* %s[A-Za-z0-0\s]{%d}' % (sep, min_title))
              ][on].str.split('\s%s' % sep).str[0]
-    it2 = df[df[on].str.contains('.* %s[A-Za-z0-0\s]{%d}' % (sep, min_title))
-             ][on].str.replace('%s$' % trail, '').str.split('\s%s' % sep).str[1]
+    it2 = df[df[on].str.contains('.* %s[A-Za-z0-0\s]{%d}' %
+                                 (sep, min_title))][on].str.replace('%s$' %
+                                                                    trail, '').str.split(r'\s%s' %
+                                                                                         sep).str[1]
 
     df['%s_0' % on] = initialize
     df['%s_1' % on] = initialize
@@ -153,7 +192,7 @@ def force_to_excel(df, file, **kwargs):
     '''
     try:
         df.to_excel(file, **kwargs)
-    except:
+    except BaseException:
         print('Data frame unicode_escape replaced. Trying to save again...')
-        df = wos_sci.applymap(lambda x: x.encode('unicode_escape').
-                              decode('utf-8') if isinstance(x, str) else x).to_excel(file, **kwargs)
+        df = wos_sci.applymap(lambda x: x.encode('unicode_escape'). decode(
+            'utf-8') if isinstance(x, str) else x).to_excel(file, **kwargs)

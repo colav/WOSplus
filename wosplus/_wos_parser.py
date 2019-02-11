@@ -27,7 +27,7 @@ def list_to_pandas(wostxt):
     '''
     Convert a list of strings from in Web of Science format, into a pandas DataFrame
     '''
-    if type(wostxt) != list:
+    if not isinstance(wostxt, list):
         sys.exit("Input must be a list: e.g. wos_txt.split('\n')")
     i = 0
     wos = pd.DataFrame()
@@ -37,9 +37,9 @@ def list_to_pandas(wostxt):
     # saverow=False
     # addline=False
     for l in wostxt:
-        i = i+1
+        i = i + 1
         # Find element of record, eg: 'XX '
-        k = re.match('^[A-Z][A-Z0-9]\s', l)
+        k = re.match(r'^[A-Z][A-Z0-9]\s', l)
         if k:
             ky = k.group()
             if len(ky.strip()) == 2:  # remove blank spaces: 'XX'
@@ -57,7 +57,7 @@ def list_to_pandas(wostxt):
             if re.match(ky, l):
                 # addline=True
                 # remove '   ' from BEGINING of line
-                value = value+ky.join(l.split(ky)[1:])
+                value = value + ky.join(l.split(ky)[1:])
 
         # special cases
         k = re.match('^[A-Z][A-Z]$', l)
