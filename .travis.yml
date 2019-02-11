@@ -10,4 +10,5 @@ install:
 # command to run tests
 script:
   - python3 tests/test.py
+  - python3 tests/test_sample.py
   - python3 setup.py sdist bdist_wheel
