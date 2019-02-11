@@ -193,8 +193,7 @@ class wosplus:
 
         WOS = fill_NaN(WOS)
         if prefix == 'SCI':
-            code = 'self.{}_not_prefix=WOS'.format(prefix)
-            exec(code)
+            exec('self.{}_not_prefix=WOS'.format(prefix))
 
         if 'DI' in WOS and 'TI' in WOS and 'SO' in WOS:
             WOS['DI'] = WOS['DI'].str.strip()
@@ -224,8 +223,7 @@ class wosplus:
         else:
             print('WARNING: Biblio already has a "Tipo" column')
 
-        code = 'self.{}=WOS'.format(prefix)
-        exec(code)
+        exec('self.{}=WOS'.format(prefix))
         self.type['{}'.format(prefix)] = '{}'.format(prefix)
         self.biblio['{}'.format(prefix)] = WOS
 
