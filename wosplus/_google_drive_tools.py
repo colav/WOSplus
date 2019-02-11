@@ -1,13 +1,12 @@
 import requests
 import io
-'''
-Based on:
-http://stackoverflow.com/a/39225272
 
-Auxilary functions for Pandas DaraFrame extended method:
-read_drive_excel(...) in wosplus class
-WARNING: Only  Google Drive id's are used here! Not file names.
-'''
+# Based on:
+# http://stackoverflow.com/a/39225272
+
+# Auxilary functions for Pandas DaraFrame extended method:
+# read_drive_excel(...) in wosplus class
+# WARNING: Only  Google Drive id's are used here! Not file names.
 
 
 def pandas_from_google_drive_csv(gid, gss_sheet=0, gss_query=None):
