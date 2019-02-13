@@ -41,7 +41,7 @@ def main():
         name="WOSplus",
 
         # Version number (initial):
-        version="0.2.3",
+        version="0.2.5",
 
         # Application author details:
         author="Diego Restrepo",
