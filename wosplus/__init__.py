@@ -17,3 +17,5 @@ from ._wos_parser import *
 from ._google_drive_tools import *
 from ._pajek_tools import *
 from .wosplus import *
+
+from . import _plotter

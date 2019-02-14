@@ -8,13 +8,14 @@ try:
     from ._wos_scp import *
     from ._merge_tools import *
     from ._wos_parser import *
+    from ._plotter import _plot_sets
 except (SystemError, ImportError):
     from _google_drive_tools import *
     from _pajek_tools import *
     from _wos_scp import *
     from _merge_tools import *
     from _wos_parser import *
-
+    from _plotter import _plot_sets
 # TODO: change Tipo for Type or something similar
 #pd.set_option('display.max_rows', 500)
 #pd.set_option('display.max_columns', 500)
@@ -226,6 +227,14 @@ class wosplus:
         exec('self.{}=WOS'.format(prefix))
         self.type['{}'.format(prefix)] = '{}'.format(prefix)
         self.biblio['{}'.format(prefix)] = WOS
+
+    def plot_sets(self, title="WOSplus Venn Diagram", figsize=(4, 4)):
+        """ Plot of Venn Diagram for papers between Scopus, Scielo and Web of Science
+        Params:
+        title: plot title
+        figsize: tuple with width and height
+        """
+        _plot_sets(self, title, figsize)
 
     def merge(self, left='WOS', right='SCI',
               right_DOI=None, right_TI=None, right_extra_journal=None,
