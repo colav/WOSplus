@@ -106,6 +106,7 @@ class wosplus:
     """
 
     def __init__(self, cfg_file=''):
+        self.Debug = False
         self.df = pd.DataFrame()
         '''
         Based on:
@@ -236,10 +237,9 @@ class wosplus:
         """
         _plot_sets(self, title, figsize)
 
-    def merge(self, left='WOS', right='SCI',
-              right_DOI=None, right_TI=None, right_extra_journal=None,
-              right_author=None, right_year=None,
-              DEBUG=False):
+    def _merge(self, left='WOS', right='SCI',left_DOI=None, left_TI=None, left_extra_journal=None,
+              left_author=None, left_year=None,right_DOI=None, right_TI=None, right_extra_journal=None,
+              right_author=None, right_year=None):
         """
         Merge left and right bibliographic dataframes by TYPE and with
         Python merge ooption: `how='outer'`.
@@ -263,7 +263,11 @@ class wosplus:
           * self.bibilio['left_right'] # pd.Series
         and also the new resulting TYPE is stored as
           * self.Tipo['left_right'] -> 'left_right' # pd.Series
-
+        
+        Example:
+            wsp.merge(left="SCI",right="SCP",left_DOI="SCI_DI",left_TI="SCI_TI",left_extra_journal="SCI_SO",left_author="SCI_AU",left_year="SCP_PY",
+            right_DOI="SCP_DOI",right_TI="SCP_Title",right_extra_journal="SCP_Source title",right_author="SCP_Authors". right_year="SCP_Year")
+        
         The merged DOI, Titles and Journal Names are stored in
         the WOS like `self.left_right` columns: DI,TI,SO with `self.left`
         priority for the values.
@@ -282,7 +286,7 @@ class wosplus:
 
         left_df = self.biblio[left].copy()
         right_df = self.biblio[right].copy()
-        if DEBUG:
+        if self.Debug:
             print('intial: {}'.format(left_df.shape[0] + right_df.shape[0]))
         if left == 'WOS' or re.search('^WOS_', left):
             left_DOI = 'DI'
@@ -292,8 +296,6 @@ class wosplus:
             left_DOI = 'SCI_DI'
             left_TI = 'SCI_TI'
             left_extra_journal = 'SCI_SO'  # helps with similiraty search  by Title
-            left_author = 'SCI_AU'
-            left_year = 'SCI_PY'
         # else:
             #sys.error('not supported left type')
         # clean Tipo
@@ -352,7 +354,7 @@ class wosplus:
             new_LEFT = LEFT
             new_RIGHT = RIGHT
 
-        if DEBUG:
+        if self.Debug:
             print(inner.shape[0], new_LEFT.shape[0],
                   new_RIGHT.shape[0], '=,...,=')
             print(LEFT.shape, RIGHT.shape)
@@ -392,7 +394,7 @@ class wosplus:
                 new_LEFT = LEFT
                 new_RIGHT = RIGHT
 
-            if DEBUG:
+            if self.Debug:
                 print(inner.shape[0], new_LEFT.shape[0], new_RIGHT.shape[0])
                 print(LEFT.shape, RIGHT.shape)
                 print(new_LEFT.shape, (next_RIGHT.append(
@@ -435,7 +437,7 @@ class wosplus:
                 new_LEFT = LEFT
                 new_RIGHT = RIGHT
 
-            if DEBUG:
+            if self.Debug:
                 print(inner.shape[0], new_LEFT.shape[0], new_RIGHT.shape[0])
                 print(LEFT.shape, RIGHT.shape)
                 print(new_LEFT.shape, (next_RIGHT.append(
@@ -456,7 +458,7 @@ class wosplus:
         LEFT_RIGHT = LEFT_RIGHT.append(full_RIGHT)
         LEFT_RIGHT = fill_NaN(LEFT_RIGHT).reset_index(drop=True)
 
-        if DEBUG:
+        if self.Debug:
             self.LEFT = LEFT
             self.RIGHT = RIGHT
             self.new_LEFT = new_LEFT
@@ -468,6 +470,27 @@ class wosplus:
         self.type['{}_{}'.format(left, right)] = '{}_{}'.format(left, right)
         self.biblio['{}_{}'.format(left, right)] = LEFT_RIGHT
 
+    def merge(self):
+        self._merge(left='WOS',right='SCI')
+        self._merge(left='WOS_SCI',right='SCP')
+        self._merge(left='WOS',right='SCP')
+        self._merge(left='SCI',right='SCP')
+        if self.Debug:
+            print('intial: {}'.format( self.WOS.shape[0]+self.SCI.shape[0]) )
+            print('final : {}'.format(  self.WOS_SCI.shape) )
+
+
+        if self.Debug:
+            print('intial: {}'.format( self.WOS_SCI.shape[0]+self.SCP.shape[0]) )
+            print('final : {}'.format( self.WOS_SCI_SCP.shape) )
+    
+        if self.Debug:
+            print('intial: {}'.format( self.WOS.shape[0]+self.SCP.shape[0]) )
+            print('final : {}'.format(  self.WOS_SCP.shape) )
+    
+        if self.Debug:
+            print('intial: {}'.format( self.SCP.shape[0]+self.SCI.shape[0]) )
+            print('final : {}'.format( self.SCI_SCP.shape) )
 
 if __name__ == '__main__':
     WOS_file = 'CIB_Wos.xlsx'
