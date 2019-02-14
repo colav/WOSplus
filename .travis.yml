@@ -9,6 +9,7 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
+  - python3 setup.py install --user
+  - python3 setup.py sdist bdist_wheel
   - python3 tests/test.py
   - python3 tests/test_sample.py
-  - python3 setup.py sdist bdist_wheel
