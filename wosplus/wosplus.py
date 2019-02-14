@@ -288,7 +288,12 @@ class wosplus:
             left_DOI = 'DI'
             left_TI = 'TI'
             left_extra_journal = 'SO'  # helps with similiraty search  by Title
-        # elif
+        elif left == 'SCI':
+            left_DOI = 'SCI_DI'
+            left_TI = 'SCI_TI'
+            left_extra_journal = 'SCI_SO'  # helps with similiraty search  by Title
+            left_author = 'SCI_AU'
+            left_year = 'SCI_PY'
         # else:
             #sys.error('not supported left type')
         # clean Tipo

@@ -18,11 +18,16 @@ def _plot_sets(wps, title, figsize):
     if not hasattr(wps, 'SCI'):
         raise Exception('wosplus', 'Scielo data no loaded')
 
-    WOS_DOIS = set(wps.WOS["DI"])
-    SCP_DOIS = set(wps.SCP["SCP_DOI"])
-    SCI_DOIS = set(wps.SCI["SCI_DI"])
+    WOS_1 = wps.WOS.shape[0]
+    SCP_2 = wps.SCP.shape[0]
+    WOS_SCP_3 = wps.WOS_SCP.shape[0]
+    SCI_4 = wps.SCI.shape[0]
+    WOS_SCI_5 = wps.WOS_SCI.shape[0]
+    SCI_SCP_6 = wps.SCI_SCP.shape[0]
+    WOS_SCI_SCP_7 = wps.WOS_SCI_SCP.shape[0]
     plt.figure(figsize=figsize)
-    v = venn3([WOS_DOIS, SCP_DOIS, SCI_DOIS], ('WOS', 'SCP', 'SCI'))
+    v = venn3(subsets=(WOS_1, SCP_2, WOS_SCP_3, SCI_4, WOS_SCI_5,
+                       SCI_SCP_6, WOS_SCI_SCP_7), set_labels=('WOS', 'SCP', 'SCI'))
     plt.title(title)
     plt.show()
     return plt, v
