@@ -12,11 +12,11 @@ def _plot_sets(wps, title, figsize):
         v  : venn3 object
     '''
     if not hasattr(wps, 'WOS'):
-        raise Exception('wosplus', 'Web of Science data no loaded')
+        raise Exception('plotter', 'Web of Science data no loaded')
     if not hasattr(wps, 'SCP'):
-        raise Exception('wosplus', 'Scopus data no loaded')
+        raise Exception('plotter', 'Scopus data no loaded')
     if not hasattr(wps, 'SCI'):
-        raise Exception('wosplus', 'Scielo data no loaded')
+        raise Exception('plotter', 'Scielo data no loaded')
 
     WOS_1 = wps.WOS.shape[0]
     SCP_2 = wps.SCP.shape[0]
