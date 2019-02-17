@@ -8,13 +8,14 @@ try:
     from ._wos_scp import *
     from ._merge_tools import *
     from ._wos_parser import *
+    from ._plotter import _plot_sets
 except (SystemError, ImportError):
     from _google_drive_tools import *
     from _pajek_tools import *
     from _wos_scp import *
     from _merge_tools import *
     from _wos_parser import *
-
+    from _plotter import _plot_sets
 # TODO: change Tipo for Type or something similar
 #pd.set_option('display.max_rows', 500)
 #pd.set_option('display.max_columns', 500)
@@ -105,6 +106,7 @@ class wosplus:
     """
 
     def __init__(self, cfg_file=''):
+        self.Debug = False
         self.df = pd.DataFrame()
         '''
         Based on:
@@ -227,10 +229,17 @@ class wosplus:
         self.type['{}'.format(prefix)] = '{}'.format(prefix)
         self.biblio['{}'.format(prefix)] = WOS
 
-    def merge(self, left='WOS', right='SCI',
-              right_DOI=None, right_TI=None, right_extra_journal=None,
-              right_author=None, right_year=None,
-              DEBUG=False):
+    def plot_sets(self, title="WOSplus Venn Diagram", figsize=(4, 4)):
+        """ Plot of Venn Diagram for papers between Scopus, Scielo and Web of Science
+        Params:
+        title: plot title
+        figsize: tuple with width and height
+        """
+        _plot_sets(self, title, figsize)
+
+    def _merge(self, left='WOS', right='SCI', left_DOI=None, left_TI=None, left_extra_journal=None,
+               left_author=None, left_year=None, right_DOI=None, right_TI=None, right_extra_journal=None,
+               right_author=None, right_year=None):
         """
         Merge left and right bibliographic dataframes by TYPE and with
         Python merge ooption: `how='outer'`.
@@ -255,56 +264,47 @@ class wosplus:
         and also the new resulting TYPE is stored as
           * self.Tipo['left_right'] -> 'left_right' # pd.Series
 
+        Examples:
+            #merge SCI with SCP
+            wsp._merge(left="SCI",right="SCP",left_DOI="SCI_DI",left_TI="SCI_TI",left_extra_journal="SCI_SO",left_author="SCI_AU",left_year="SCP_PY",
+            right_DOI="SCP_DOI",right_TI="SCP_Title",right_extra_journal="SCP_Source title",right_author="SCP_Authors", right_year="SCP_Year")
+
+            #merge WOS with SCI
+            wsp._merge(left="WOS",right="SCI",left_DOI="DI",left_TI="TI",left_extra_journal="SO",left_author="AU",left_year="PY",
+            right_DOI="SCI_DI",right_TI="SCI_TI",right_extra_journal="SCI_SO",right_author="SCI_AU", right_year="SCI_PY")
+
+            #merge WOS_SCI with SCP NOTE: requires to call first a merge between WOS and SCI with WOS in the left key
+            wsp._merge(left="WOS_SCI",right="SCP",left_DOI="DI",left_TI="TI",left_extra_journal="SO",left_author="AU",left_year="PY",
+            right_DOI="SCP_DOI",right_TI="SCP_Title",right_extra_journal="SCP_Source title",right_author="SCP_Authors", right_year="SCP_Year")
+
+            #merge WOS with SCP
+            wsp._merge(left="WOS",right="SCP",left_DOI="DI",left_TI="TI",left_extra_journal="SO",left_author="AU",left_year="PY",
+            right_DOI="SCP_DOI",right_TI="SCP_Title",right_extra_journal="SCP_Source title",right_author="SCP_Authors", right_year="SCP_Year")
+
         The merged DOI, Titles and Journal Names are stored in
         the WOS like `self.left_right` columns: DI,TI,SO with `self.left`
         priority for the values.
         """
         if not hasattr(self, left) or not hasattr(self, right):
-            sys.exit('ERROR:  {} and {} must be attributes of class {}'.format(
+            raise Exception('wosplus', 'ERROR:  {} and {} must be attributes of class {}'.format(
                 left, right, self.__class__.__name__))
 
         if left not in self.biblio or right not in self.biblio:
-            sys.exit('ERROR: missing biblio Series in {} {} {}'.format(
+            raise Exception('wosplus', 'ERROR: missing biblio Series in {} {} {}'.format(
                 left, right, self.__class__.__name__))
 
         if left not in self.type or right not in self.type:
-            sys.exit('ERROR: missing type Series in {} {} {}'.format(
+            raise Exception('wosplus', 'ERROR: missing type Series in {} {} {}'.format(
                 left, right, self.__class__.__name__))
 
         left_df = self.biblio[left].copy()
         right_df = self.biblio[right].copy()
-        if DEBUG:
+        if self.Debug:
             print('intial: {}'.format(left_df.shape[0] + right_df.shape[0]))
-        if left == 'WOS' or re.search('^WOS_', left):
-            left_DOI = 'DI'
-            left_TI = 'TI'
-            left_extra_journal = 'SO'  # helps with similiraty search  by Title
-        # elif
-        # else:
-            #sys.error('not supported left type')
+
         # clean Tipo
         if 'Tipo' in right_df:
             right_df = right_df.drop('Tipo', axis='columns')
-
-        if right == 'SCI':
-            right_DOI = 'SCI_DI'
-            right_TI = 'SCI_TI'
-            right_extra_journal = 'SCI_SO'  # helps with similiraty search  by Title
-            right_author = 'SCI_AU'
-            right_year = 'SCI_PY'
-        elif right == 'SCP':
-            if 'SCP_Title' in right_df and 'SCP_Title_0' not in right_df:
-                right_df = split_translated_columns(
-                    right_df.copy(), on='SCP_Title', sep='\[', min_title=16)
-            right_DOI = 'SCP_DOI'
-            right_TI = 'SCP_Title'
-            # helps with similiraty search  by Title
-            right_extra_journal = 'SCP_Source title'
-            right_author = 'SCP_Authors'
-            right_year = 'SCP_Year'
-
-        # else:
-            #sys.error('not supported right type')
 
         # Merge on DOIs
 
@@ -338,7 +338,7 @@ class wosplus:
             new_LEFT = LEFT
             new_RIGHT = RIGHT
 
-        if DEBUG:
+        if self.Debug:
             print(inner.shape[0], new_LEFT.shape[0],
                   new_RIGHT.shape[0], '=,...,=')
             print(LEFT.shape, RIGHT.shape)
@@ -378,7 +378,7 @@ class wosplus:
                 new_LEFT = LEFT
                 new_RIGHT = RIGHT
 
-            if DEBUG:
+            if self.Debug:
                 print(inner.shape[0], new_LEFT.shape[0], new_RIGHT.shape[0])
                 print(LEFT.shape, RIGHT.shape)
                 print(new_LEFT.shape, (next_RIGHT.append(
@@ -421,7 +421,7 @@ class wosplus:
                 new_LEFT = LEFT
                 new_RIGHT = RIGHT
 
-            if DEBUG:
+            if self.Debug:
                 print(inner.shape[0], new_LEFT.shape[0], new_RIGHT.shape[0])
                 print(LEFT.shape, RIGHT.shape)
                 print(new_LEFT.shape, (next_RIGHT.append(
@@ -442,7 +442,7 @@ class wosplus:
         LEFT_RIGHT = LEFT_RIGHT.append(full_RIGHT)
         LEFT_RIGHT = fill_NaN(LEFT_RIGHT).reset_index(drop=True)
 
-        if DEBUG:
+        if self.Debug:
             self.LEFT = LEFT
             self.RIGHT = RIGHT
             self.new_LEFT = new_LEFT
@@ -453,6 +453,35 @@ class wosplus:
         exec('self.{}_{}=LEFT_RIGHT'.format(left, right))
         self.type['{}_{}'.format(left, right)] = '{}_{}'.format(left, right)
         self.biblio['{}_{}'.format(left, right)] = LEFT_RIGHT
+
+    def merge(self):
+
+        self._merge(left="WOS", right="SCI", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
+                    right_DOI="SCI_DI", right_TI="SCI_TI", right_extra_journal="SCI_SO", right_author="SCI_AU", right_year="SCI_PY")
+
+        self._merge(left="WOS_SCI", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
+                    right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
+
+        self._merge(left="WOS", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
+                    right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
+
+        self._merge(left="SCI", right="SCP", left_DOI="SCI_DI", left_TI="SCI_TI", left_extra_journal="SCI_SO", left_author="SCI_AU", left_year="SCP_PY",
+                    right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
+        if self.Debug:
+            print('intial: {}'.format(self.WOS.shape[0]+self.SCI.shape[0]))
+            print('final : {}'.format(self.WOS_SCI.shape))
+
+        if self.Debug:
+            print('intial: {}'.format(self.WOS_SCI.shape[0]+self.SCP.shape[0]))
+            print('final : {}'.format(self.WOS_SCI_SCP.shape))
+
+        if self.Debug:
+            print('intial: {}'.format(self.WOS.shape[0]+self.SCP.shape[0]))
+            print('final : {}'.format(self.WOS_SCP.shape))
+
+        if self.Debug:
+            print('intial: {}'.format(self.SCP.shape[0]+self.SCI.shape[0]))
+            print('final : {}'.format(self.SCI_SCP.shape))
 
 
 if __name__ == '__main__':

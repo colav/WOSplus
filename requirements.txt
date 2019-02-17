@@ -6,4 +6,4 @@ pandas
 unidecode
 python-levenshtein
 requests_testadapter
-wosplus
+matplotlib_venn

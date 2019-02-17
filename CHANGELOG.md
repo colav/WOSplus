@@ -6,14 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Nothing new
+-   Refactored _merge method in class wosplus, left and right keys are mandatory
+-   Changed sys.exit for raise with exceptions
+-   Fixed travis build system
+-   Fixed tests
 
 ## [0.2.5] - 2019-02-13
 ### Added
-- Support for Travis CI
-- Support for codacy rules with range A
+-   Support for Travis CI
+-   Support for codacy rules with range A
 
 ### Changed
-- removed unused imports and variables
-- style to PEP8 standard
-
+-   Removed unused imports and variables
+-   Style to PEP8 standard

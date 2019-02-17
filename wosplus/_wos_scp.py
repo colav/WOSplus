@@ -571,7 +571,8 @@ def get_doi(
                     if len(rr.json()["message"][check_mesagges_key]):
                         chk = get_close_matches_Levenshtein(
                             check_text,
-                            rr.json()["message"][check_mesagges_key][0].lower(),
+                            rr.json()[
+                                "message"][check_mesagges_key][0].lower(),
                             n=1,
                             cutoff=similarity)
                         if chk:
