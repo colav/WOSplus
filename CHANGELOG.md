@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Nothing new
+- Refactored _merge method in class wosplus, left and right keys are mandatory
+- cahnged sys.exit for raise with exceptions
+
 
 ## [0.2.5] - 2019-02-13
 ### Added
