@@ -1,5 +1,5 @@
-from matplotlib_venn import venn3
 from matplotlib import pyplot as plt
+from venn import draw_venn, generate_colors
 
 
 def _plot_sets(wps, title, figsize):
@@ -18,16 +18,21 @@ def _plot_sets(wps, title, figsize):
     if not hasattr(wps, 'SCI'):
         raise Exception('plotter', 'Scielo data no loaded')
 
-    WOS_1 = wps.WOS.shape[0]
-    SCP_2 = wps.SCP.shape[0]
-    WOS_SCP_3 = wps.WOS_SCP.shape[0]
-    SCI_4 = wps.SCI.shape[0]
-    WOS_SCI_5 = wps.WOS_SCI.shape[0]
-    SCI_SCP_6 = wps.SCI_SCP.shape[0]
-    WOS_SCI_SCP_7 = wps.WOS_SCI_SCP.shape[0]
+    labels = ["SCP", "SCI", "WOS"]
+
+    petal_labels = {}
+    petal_labels["001"] = wps.WOS.shape[0]
+    petal_labels["010"] = wps.SCI.shape[0]
+    petal_labels["011"] = wps.WOS_SCI.shape[0]
+    petal_labels["100"] = wps.SCP.shape[0]
+    petal_labels["101"] = wps.WOS_SCP.shape[0]
+    petal_labels["110"] = wps.SCI_SCP.shape[0]
+    petal_labels["111"] = wps.WOS_SCI_SCP.shape[0]
     plt.figure(figsize=figsize)
-    v = venn3(subsets=(WOS_1, SCP_2, WOS_SCP_3, SCI_4, WOS_SCI_5,
-                       SCI_SCP_6, WOS_SCI_SCP_7), set_labels=('WOS', 'SCP', 'SCI'))
+    v = draw_venn(
+        petal_labels=petal_labels, dataset_labels=labels,
+        hint_hidden=False, colors=generate_colors(n_colors=3),
+        figsize=(8, 8), fontsize=14, legend_loc="best", ax=None)
     plt.title(title)
     plt.show()
     return plt, v
