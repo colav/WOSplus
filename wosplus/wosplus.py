@@ -118,14 +118,22 @@ class wosplus:
             #tmp = cfg.read(cfg_file)
             cfg.read(cfg_file)
         else:
-            # tmp = cfg.read_dict({'FILES':
-                                 # {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
-            cfg.read_dict(
-                {'FILES': {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
+            tmp = cfg.read_dict({'FILES':
+                                 {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
 
         self.drive_file = cfg['FILES']
         self.type = pd.Series()
         self.biblio = pd.Series()
+
+    def read_drive_file(self, file_name):
+        '''
+        Convert Google Drive File in a Pyton IO file object
+
+         Requires a self.drive_file dictionary intialized with the class.
+         See read_drive_excel help
+        '''
+        return download_file_from_google_drive(
+            self.drive_file.get(file_name))
 
     def read_drive_excel(self, file_name, **kwargs):
         '''
@@ -157,12 +165,36 @@ class wosplus:
 
         # Try to load xlsx file if file extension is not csv
         if self.drive_file.get(file_name):
-            return pd.read_excel(
-                download_file_from_google_drive(
-                    self.drive_file.get(file_name)),
-                **kwargs)  # ,{} is an accepted option
+            # ,{} is an accepted option
+            return pd.read_excel(self.read_drive_file(file_name), **kwargs)
         else:
             return pd.read_excel(file_name, **kwargs)
+
+    def read_drive_json(self, file_name, **kwargs):
+        '''
+        Generalization of the Pandas DataFrame read_json method
+        to include google drive file names:
+
+         Requires a self.drive_file dictionary intialized with the class.
+         See read_drive_excel help
+        '''
+        if self.drive_file.get(file_name):
+            return pd.read_json(self.read_drive_file(file_name), **kwargs)
+        else:
+            return pd.read_json(file_name, **kwargs)
+
+    def read_drive_csv(self, file_name, **kwargs):
+        '''
+        Generalization of the Pandas DataFrame read_csv method
+        to include google drive file names:
+
+         Requires a self.drive_file dictionary intialized with the class.
+         See read_drive_excel help
+        '''
+        if self.drive_file.get(file_name):
+            return pd.read_csv(self.read_drive_file(file_name), **kwargs)
+        else:
+            return pd.read_csv(file_name, **kwargs)
 
     def load_biblio(self, WOS_file, prefix='WOS'):
         """
@@ -178,8 +210,11 @@ class wosplus:
             DOI = 'DOI'
         # elif: #Other no WOS-like pures
 
-        if not re.search(r'\.txt$', WOS_file):
-            WOS = self.read_drive_excel(WOS_file)
+        if not re.search('\.txt$', WOS_file):
+            if re.search('\.json$', WOS_file):
+                WOS = self.read_drive_json(WOS_file)
+            else:
+                WOS = self.read_drive_excel(WOS_file)
         else:
             id_google_drive = self.drive_file.get('{}'.format(WOS_file))
             if id_google_drive:
@@ -220,7 +255,7 @@ class wosplus:
             WOS = columns_add_prefix(WOS, prefix)
 
         # Without prefix columns
-        if not WOS.get('Tipo') and not re.search('_', prefix):
+        if 'Tipo' not in WOS and not re.search('_', prefix):
             WOS['Tipo'] = prefix
         else:
             print('WARNING: Biblio already has a "Tipo" column')

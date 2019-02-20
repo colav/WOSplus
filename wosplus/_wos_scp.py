@@ -50,7 +50,7 @@ def check_hash(df, hashseries, in_hash, min_match=10):
         within which in_hash will be searched for match at least min_match characters
     '''
     comparision = True
-    for si in reversed(range(0, len(in_hash) + 1)):
+    for si in reversed(range(0, len(in_hash)+1)):
         chk = df[hashseries.str.match(in_hash[:si])]
         if chk.shape[0] > 0:
             return comparision, chk
@@ -61,8 +61,7 @@ def check_hash(df, hashseries, in_hash, min_match=10):
 
 
 def columns_add_prefix(df, prefix):
-    return df.rename_axis(dict((key, prefix + '_' + key)
-                               for key in df.columns.values), axis=1)
+    return df.rename(dict((key, prefix+'_'+key) for key in df.columns.values), axis=1)
 
 
 def fill_NaN(df):
