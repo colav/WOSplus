@@ -237,6 +237,61 @@ class wosplus:
         """
         _plot_sets(self, title, figsize)
 
+    def normalize(self):
+        """
+        This method allows to normalize the name of the columns across the different databases
+        """
+        if hasattr(self, "SCP"):
+            SCP_COLNAMES = {}
+            SCP_COLNAMES["SCP_DOI"] = "DI"
+            SCP_COLNAMES["SCP_Title"] = "TI"
+            SCP_COLNAMES["SCP_Source title"] = "SO"
+            SCP_COLNAMES["SCP_Year"] = "PY"
+            SCP_COLNAMES["SCP_ISSN"] = "SN"
+            SCP_COLNAMES["SCP_Abstract"] = "AB"
+            SCP_COLNAMES["SCP_Page end"] = "EP"
+            SCP_COLNAMES["SCP_Authors"] = "AU"
+            SCP_COLNAMES["SCP_Page count"] = "PG"
+            SCP_COLNAMES["SCP_ISBN"] = "BN"
+            SCP_COLNAMES["SCP_Language of Original Document"] = "LA"
+            SCP_COLNAMES["SCP_Issue"] = "IS"
+            SCP_COLNAMES["SCP_Page start"] = "BP"
+            SCP_COLNAMES["SCP_Author Keywords"] = "DE"
+            SCP_COLNAMES["SCP_Document Type"] = "DT"
+            SCP_COLNAMES["SCP_PubMed ID"] = "PM"
+            SCP_COLNAMES["SCP_Publisher"] = "PU"
+            SCP_COLNAMES["SCP_Volume"] = "VL"
+            SCP_COLNAMES["SCP_Conference name"] = "CT"
+            SCP_COLNAMES["SCP_Conference date"] = "CY"
+            SCP_COLNAMES["SCP_Conference location"] = "CL"
+            self.SCP = self.SCP.rename(index=str, columns=SCP_COLNAMES)
+        else:
+            print("WARNING: SCP database not loaded")
+
+        if hasattr(self, "SCI"):
+            # NOTE: PG BN CT CY CL columns are not defined in SCI
+
+            SCI_COLNAMES = {}
+            SCI_COLNAMES["SCI_DI"] = "DI"
+            SCI_COLNAMES["SCI_TI"] = "TI"
+            SCI_COLNAMES["SCI_SO"] = "SO"
+            SCI_COLNAMES["SCI_PY"] = "PY"
+            SCI_COLNAMES["SCI_SN"] = "SN"
+            SCI_COLNAMES["SCI_AB"] = "AB"
+            SCI_COLNAMES["SCI_EP"] = "EP"
+            SCI_COLNAMES["SCI_AU"] = "AU"
+            SCI_COLNAMES["SCI_LA"] = "LA"
+            SCI_COLNAMES["SCI_IS"] = "IS"
+            SCI_COLNAMES["SCI_BP"] = "BP"
+            SCI_COLNAMES["SCI_DE"] = "DE"
+            SCI_COLNAMES["SCI_DT"] = "DT"
+            SCI_COLNAMES["SCI_PM"] = "PM"
+            SCI_COLNAMES["SCI_PU"] = "PU"
+            SCI_COLNAMES["SCI_VL"] = "VL"
+            self.SCI = self.SCI.rename(index=str, columns=SCI_COLNAMES)
+        else:
+            print("WARNING: SCI database not loaded")
+
     def _merge(self, left='WOS', right='SCI', left_DOI=None, left_TI=None, left_extra_journal=None,
                left_author=None, left_year=None, right_DOI=None, right_TI=None, right_extra_journal=None,
                right_author=None, right_year=None):
