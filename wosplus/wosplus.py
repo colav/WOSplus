@@ -115,11 +115,10 @@ class wosplus:
         cfg = ConfigParser()
         cfg.optionxform = str
         if cfg_file:
-            #tmp = cfg.read(cfg_file)
             cfg.read(cfg_file)
         else:
-            tmp = cfg.read_dict({'FILES':
-                                 {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
+            cfg.read_dict({'FILES':
+                           {'Sample_WOS.xlsx': '0BxoOXsn2EUNIMldPUFlwNkdLOTQ'}})
 
         self.drive_file = cfg['FILES']
         self.type = pd.Series()
