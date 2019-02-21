@@ -41,7 +41,7 @@ def main():
         name="WOSplus",
 
         # Version number (initial):
-        version="0.2.5",
+        version="0.2.6",
 
         # Application author details:
         author="Diego Restrepo",
@@ -54,7 +54,7 @@ def main():
         include_package_data=True,
 
         # Details
-        url="https://github.com/restrepo/WOSplus",
+        url="https://github.com/colav/WOSplus",
 
         #
         license="BSD",
