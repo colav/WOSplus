@@ -1,16 +1,19 @@
 from matplotlib import pyplot as plt
 from venn import draw_venn, generate_colors
 
-
+"""@package wosplus.plotter
+Module for visualization
+More details.
+"""
 def _plot_sets(wps, title, figsize):
-    '''
+    """
     Plot the venn diagram given and wosplus object,
     Params:
         wps:  wosplus object
     Returns:
         plt: matplotlib pyplot object
         v  : venn3 object
-    '''
+    """
     if not hasattr(wps, 'WOS'):
         raise Exception('plotter', 'Web of Science data no loaded')
     if not hasattr(wps, 'SCP'):

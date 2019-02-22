@@ -1,0 +1,15 @@
+configparser
+xlrd
+requests
+numpy
+pandas
+unidecode
+python-levenshtein
+requests_testadapter
+venn
+
+sphinx
+twine
+wheel
+autopep8
+doxypypy

@@ -32,4 +32,4 @@ Further details in [test_sample.ipynb](https://github.com/restrepo/WOSplus/blob/
 <!-- mv diagram to http://interactive.blockdiag.com and links as in https://github.com/jupyter/docker-stacks -->
 
 ## Visual Overview
-![design](./internal/inherit-diagram.svg)
+![design](https://raw.githubusercontent.com/colav/WOSplus/master/internal/inherit-diagram.svg)
