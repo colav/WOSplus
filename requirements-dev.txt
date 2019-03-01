@@ -12,4 +12,3 @@ sphinx
 twine
 wheel
 autopep8
-doxypypy
