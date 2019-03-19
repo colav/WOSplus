@@ -10,10 +10,10 @@ Welcome to Colav's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+    ./api.rst
+    
 Indices and tables
 ==================
-*  API <api.rst>
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
