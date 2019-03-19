@@ -1,10 +1,6 @@
 from matplotlib import pyplot as plt
 from venn import draw_venn, generate_colors
 
-"""@package wosplus.plotter
-Module for visualization
-More details.
-"""
 def _plot_sets(wps, title, figsize):
     """
     Plot the venn diagram given and wosplus object,

@@ -20,13 +20,13 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Colav'
-copyright = '2019, Colav Org'
+#copyright = '2019, Colav Org'
 author = 'Diego Restrepo, Omar Zapata'
 
 # The short X.Y version
-version = ''
+version = '0.2.8'
 # The full version, including alpha/beta/rc tags
-release = '0.2.7'
+release = '0.2.8'
 
 
 # -- General configuration ---------------------------------------------------
