@@ -1,13 +1,19 @@
+import unittest
+import warnings
+import tempfile
+
+def warn(*args, **kwargs):
+    pass
+
+warnings.warn = warn
+warnings.filterwarnings("ignore")
+
 try:
     import wosplus
 except BaseException:  # (ImportError, ModuleNotFoundError):
     import sys
     sys.path.append("../wosplus")
     import wosplus
-
-import unittest
-import warnings
-import tempfile
 
 # See:
 # https://jeffknupp.com/blog/2013/12/09/improve-your-python-understanding-unit-testing/
@@ -32,65 +38,50 @@ class PrimesTestCase(unittest.TestCase):
 
     def test_merge(self):
         warnings.filterwarnings("ignore")
+        #################################
+        #Tetsing dimensions of the data #
+        #################################
+        
+        #Initial data
+        self.assertTrue(self.cib.WOS.shape[0]  == 27)
+        self.assertTrue(self.cib.SCI.shape[0]  == 12)
+        self.assertTrue(self.cib.SCP.shape[0]  == 10)
 
         self.assertTrue(self.cib.WOS.shape[0] +
-                        self.cib.SCI.shape[0] + self.cib.SCP.shape[0] == 48)
-
+                        self.cib.SCI.shape[0] + self.cib.SCP.shape[0] == 49)
+        
+        #Testing after merge WOS and SCI
         self.cib.merge(left="WOS", right="SCI", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
                         right_DOI="SCI_DI", right_TI="SCI_TI", right_extra_journal="SCI_SO", right_author="SCI_AU", right_year="SCI_PY")
 
-        self.assertTrue(self.cib.WOS.shape[0] + self.cib.SCI.shape[0] == 38)
-        self.assertTrue(self.cib.WOS_SCI.shape[0] == 28)
+        self.assertTrue(self.cib.WOS.shape[0] + self.cib.SCI.shape[0] == 39)
+        self.assertTrue(self.cib.WOS_SCI.shape[0] == 29)
 
+        #Testing after merge WOS and SCI and SCP
         self.cib.merge(left="WOS_SCI", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
                         right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
 
         self.assertTrue(
-            self.cib.WOS_SCI.shape[0] + self.cib.SCP.shape[0] == 38)
+            self.cib.WOS_SCI.shape[0] + self.cib.SCP.shape[0] == 39)
         self.assertTrue(self.cib.WOS_SCI_SCP.shape[0] == 30)
-
-        self.cib.merge(left="WOS", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
-                        right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
-
-        self.cib.merge(left="SCI", right="SCP", left_DOI="SCI_DI", left_TI="SCI_TI", left_extra_journal="SCI_SO", left_author="SCI_AU", left_year="SCP_PY",
-                        right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
-
-        self.cib.mergeall()
-        # NOTE: added tests for more merge configs
+        
+        #Testing the number of items for every type combined and its combinations
+        self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "WOS"].shape[0] == 15 )
+        self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "SCI"].shape[0] == 1 )
+        self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "WOS_SCI"].shape[0] == 4 )
+        self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "SCP"].shape[0] == 1 )
+        self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "WOS_SCP"].shape[0] == 2 )
+        self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "SCI_SCP"].shape[0] == 1 )
+        self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "WOS_SCI_SCP"].shape[0] == 6 )
 
         self.assertTrue(
             list(
-                self.cib.WOS_SCI_SCP.Tipo.values) == [
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS_SCI',
-                'SCI',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS',
-                'WOS_SCI',
-                'WOS_SCI',
-                'WOS_SCI',
-                'WOS_SCP',
-                'WOS_SCI_SCP',
-                'WOS_SCI_SCP',
-                'WOS_SCI_SCP',
-                'WOS_SCP',
-                'WOS_SCI_SCP',
-                'WOS_SCI_SCP',
-                'WOS_SCI_SCP',
-                'SCP',
-                'SCP'])
+                self.cib.WOS_SCI_SCP.Tipo.values) == ['WOS', 'WOS', 'WOS', 'WOS', 'WOS', 'WOS', 'WOS_SCI', 'SCI', 'WOS',
+       'WOS', 'WOS', 'WOS', 'WOS', 'WOS', 'WOS', 'WOS', 'WOS', 'WOS_SCI',
+       'WOS_SCI', 'WOS_SCI', 'WOS_SCP', 'WOS_SCI_SCP', 'WOS_SCI_SCP',
+       'WOS_SCI_SCP', 'SCI_SCP', 'WOS_SCP', 'WOS_SCI_SCP', 'WOS_SCI_SCP',
+       'WOS_SCI_SCP', 'SCP'])
+
 
     def test_normalize(self):
         self.cib.normalize()
