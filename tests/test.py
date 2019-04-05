@@ -64,7 +64,6 @@ class PrimesTestCase(unittest.TestCase):
         self.assertTrue(
             self.cib.WOS_SCI.shape[0] + self.cib.SCP.shape[0] == 39)
         self.assertTrue(self.cib.WOS_SCI_SCP.shape[0] == 30)
-        
         #Testing the number of items for every type combined and its combinations
         self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "WOS"].shape[0] == 15 )
         self.assertTrue( self.cib.WOS_SCI_SCP[self.cib.WOS_SCI_SCP.Tipo == "SCI"].shape[0] == 1 )
