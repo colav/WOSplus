@@ -2,6 +2,8 @@
 import re
 import pandas as pd
 from configparser import ConfigParser
+import warnings
+from enum import Enum
 try:
     from ._google_drive_tools import *
     from ._pajek_tools import *
@@ -20,6 +22,12 @@ except (SystemError, ImportError):
 #pd.set_option('display.max_rows', 500)
 #pd.set_option('display.max_columns', 500)
 # pd.set_option('display.max_colwidth',1000)
+
+
+class Type(Enum):
+    WOS = 1  # Web of Science
+    SCI = 2  # Scielo
+    SCP = 3  # Scopus
 
 
 def grep(pattern, multilinestring):
@@ -196,6 +204,7 @@ class wosplus:
             return pd.read_csv(file_name, **kwargs)
 
     def load_biblio(self, WOS_file, prefix='WOS'):
+        warnings.warn("wosplus.load_biblio will be changed in the version 0.2.10 to use load_data('file...',Type.WOS) instead load_data('file...',prefix='WOS')", DeprecationWarning)
         """
         Load WOS xlsx file, or if prefix is given:
           prefix='SCI': Load SCI xlsx file and append the 'SCI_' prefix in each column
@@ -553,11 +562,6 @@ class wosplus:
         self.merge(left="WOS_SCI", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
                    right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
 
-        self.merge(left="WOS", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
-                   right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
-
-        self.merge(left="SCI", right="SCP", left_DOI="SCI_DI", left_TI="SCI_TI", left_extra_journal="SCI_SO", left_author="SCI_AU", left_year="SCP_PY",
-                   right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
         if self.Debug:
             print('intial: {}'.format(self.WOS.shape[0]+self.SCI.shape[0]))
             print('final : {}'.format(self.WOS_SCI.shape))
@@ -565,14 +569,6 @@ class wosplus:
         if self.Debug:
             print('intial: {}'.format(self.WOS_SCI.shape[0]+self.SCP.shape[0]))
             print('final : {}'.format(self.WOS_SCI_SCP.shape))
-
-        if self.Debug:
-            print('intial: {}'.format(self.WOS.shape[0]+self.SCP.shape[0]))
-            print('final : {}'.format(self.WOS_SCP.shape))
-
-        if self.Debug:
-            print('intial: {}'.format(self.SCP.shape[0]+self.SCI.shape[0]))
-            print('final : {}'.format(self.SCI_SCP.shape))
 
 
 if __name__ == '__main__':

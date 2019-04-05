@@ -74,6 +74,7 @@ def main():
             'pandas',
             'unidecode',
             'python-levenshtein',
+            'venn',
         ],
     )
 
