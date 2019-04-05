@@ -2,8 +2,7 @@
 import re
 import pandas as pd
 from configparser import ConfigParser
-import warnings
-from enum import Enum
+
 try:
     from ._google_drive_tools import *
     from ._pajek_tools import *
