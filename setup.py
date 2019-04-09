@@ -41,7 +41,7 @@ def main():
         name="WOSplus",
 
         # Version number (initial):
-        version="0.2.8",
+        version="0.2.10",
 
         # Application author details:
         author="Diego Restrepo",
@@ -74,6 +74,7 @@ def main():
             'pandas',
             'unidecode',
             'python-levenshtein',
+            'venn',
         ],
     )
 

@@ -2,6 +2,7 @@
 import re
 import pandas as pd
 from configparser import ConfigParser
+
 try:
     from ._google_drive_tools import *
     from ._pajek_tools import *
@@ -326,9 +327,9 @@ class wosplus:
         else:
             print("WARNING: SCI database not loaded")
 
-    def merge(self, left='WOS', right='SCI', left_DOI=None, left_TI=None, left_extra_journal=None,
-              left_author=None, left_year=None, right_DOI=None, right_TI=None, right_extra_journal=None,
-              right_author=None, right_year=None):
+    def merge(self, left, right, left_DOI, left_TI, left_extra_journal,
+              left_author, left_year, right_DOI, right_TI, right_extra_journal,
+              right_author, right_year):
         """
         Merge left and right bibliographic dataframes by TYPE and with
         Python merge ooption: `how='outer'`.
@@ -542,37 +543,6 @@ class wosplus:
         exec('self.{}_{}=LEFT_RIGHT'.format(left, right))
         self.type['{}_{}'.format(left, right)] = '{}_{}'.format(left, right)
         self.biblio['{}_{}'.format(left, right)] = LEFT_RIGHT
-
-    def mergeall(self):
-        '''
-        Method to merge all previuosly loaded databases, for WOS, SCI and SCP
-        '''
-        self.merge(left="WOS", right="SCI", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
-                   right_DOI="SCI_DI", right_TI="SCI_TI", right_extra_journal="SCI_SO", right_author="SCI_AU", right_year="SCI_PY")
-
-        self.merge(left="WOS_SCI", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
-                   right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
-
-        self.merge(left="WOS", right="SCP", left_DOI="DI", left_TI="TI", left_extra_journal="SO", left_author="AU", left_year="PY",
-                   right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
-
-        self.merge(left="SCI", right="SCP", left_DOI="SCI_DI", left_TI="SCI_TI", left_extra_journal="SCI_SO", left_author="SCI_AU", left_year="SCP_PY",
-                   right_DOI="SCP_DOI", right_TI="SCP_Title", right_extra_journal="SCP_Source title", right_author="SCP_Authors", right_year="SCP_Year")
-        if self.Debug:
-            print('intial: {}'.format(self.WOS.shape[0]+self.SCI.shape[0]))
-            print('final : {}'.format(self.WOS_SCI.shape))
-
-        if self.Debug:
-            print('intial: {}'.format(self.WOS_SCI.shape[0]+self.SCP.shape[0]))
-            print('final : {}'.format(self.WOS_SCI_SCP.shape))
-
-        if self.Debug:
-            print('intial: {}'.format(self.WOS.shape[0]+self.SCP.shape[0]))
-            print('final : {}'.format(self.WOS_SCP.shape))
-
-        if self.Debug:
-            print('intial: {}'.format(self.SCP.shape[0]+self.SCI.shape[0]))
-            print('final : {}'.format(self.SCI_SCP.shape))
 
 
 if __name__ == '__main__':
