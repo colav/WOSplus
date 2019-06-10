@@ -196,7 +196,7 @@ class wosplus:
         else:
             return pd.read_csv(file_name, **kwargs)
 
-    def load_biblio(self, WOS_file, prefix='WOS'):
+    def load_biblio(self, WOS_file, prefix='WOS',**kwargs):
         """
         Load WOS xlsx file, or if prefix is given:
           prefix='SCI': Load SCI xlsx file and append the 'SCI_' prefix in each column
@@ -211,15 +211,15 @@ class wosplus:
         # elif: #Other no WOS-like pures
 
         if not re.search('\.txt$', WOS_file):
-            if re.search('\.json$', WOS_file):
-                WOS = self.read_drive_json(WOS_file)
+            if re.search('\.json', WOS_file):
+                WOS = self.read_drive_json(WOS_file,**kwargs)
             else:
-                WOS = self.read_drive_excel(WOS_file)
+                WOS = self.read_drive_excel(WOS_file,**kwargs)
         else:
             id_google_drive = self.drive_file.get('{}'.format(WOS_file))
             if id_google_drive:
                 wos_txt = download_file_from_google_drive(
-                    id_google_drive)  # ,binary=False)
+                    id_google_drive,**kwargs)  # ,binary=False)
                 WOS = wos_to_list_to_pandas(wos_txt)
             else:  # check local file
                 my_file = Path(WOS_file)
