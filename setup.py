@@ -59,7 +59,7 @@ def main():
         #
         license="BSD",
 
-        description="WOS+ is a tool for to manage and merge bibliographic databases like Web Of Science or Scopus",
+        description="WOS+ is a tool to manage and merge bibliographic databases like Web Of Science or Scopus",
 
         long_description=open("README.md").read(),
 
